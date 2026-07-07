@@ -17,128 +17,170 @@ MachoMenuSetKeybind(MenuWindow, 0x14)
 MachoMenuSetAccent(MenuWindow, 255, 61, 255)
 
 MachoMenuText(MenuWindow, "0.V1")
--- Tabs
-local SelfTab      = MachoMenuAddTab(MenuWindow, "Self")
-local ServerTab    = MachoMenuAddTab(MenuWindow, "Server")
-local WeaponTab    = MachoMenuAddTab(MenuWindow, "Weapons")
-local VehicleTab   = MachoMenuAddTab(MenuWindow, "Vehicle")
-local TeleportTab  = MachoMenuAddTab(MenuWindow, "Teleport")
-local AnimTab      = MachoMenuAddTab(MenuWindow, "Animations")
-local TriggersTab  = MachoMenuAddTab(MenuWindow, "Triggers")
-local VipTab       = MachoMenuAddTab(MenuWindow, "Vip")
-local SettingTab   = MachoMenuAddTab(MenuWindow, ".gg/blossoma")
--- Tab Layouts
-local function SingleSection(tab, name)
-    local x = TabsBarWidth + SectionsPadding
-    local y = SectionsPadding + MachoPanelGap
-    return MachoMenuGroup(tab, name, x, y, x + SectionChildWidth - (SectionsPadding * 2), y + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
+
+-- local function CreateRainbowInterface()
+--     CreateThread(function()
+--         local offset = 0.0
+--         while true do
+--             offset = offset + 0.065
+--             local r = math.floor(127 + 127 * math.sin(offset))
+--             local g = math.floor(127 + 127 * math.sin(offset + 2))
+--             local b = math.floor(127 + 127 * math.sin(offset + 4))
+--             MachoMenuSetAccent(MenuWindow, r, g, b)
+--             Wait(25)
+--         end
+--     end)
+-- end
+
+-- CreateRainbowInterface()
+
+local PlayerTab = MachoMenuAddTab(MenuWindow, "Self")
+local ServerTab = MachoMenuAddTab(MenuWindow, "Server")
+local TeleportTab = MachoMenuAddTab(MenuWindow, "blossomTP")
+local WeaponTab = MachoMenuAddTab(MenuWindow, "blossomWeapon")
+local VehicleTab = MachoMenuAddTab(MenuWindow, "blossomVehicle")
+local EmoteTab = MachoMenuAddTab(MenuWindow, "Animations")
+local EventTab = MachoMenuAddTab(MenuWindow, "blossomTriggers")
+local SettingTab = MachoMenuAddTab(MenuWindow, ".gg/blossoma")
+local VipTab = MachoMenuAddTab(MenuWindow, "Vip")
+
+-- Tab Content
+local function PlayerTabContent(tab)
+    local leftX = TabsBarWidth + SectionsPadding
+    local topY = SectionsPadding + MachoPanelGap
+    local midY = topY + HalfHeight + SectionsPadding
+    local rightX = leftX + ColumnWidth + SectionsPadding
+
+    local totalRightHeight = (HalfHeight * 2) + SectionsPadding
+
+    local SectionOne = MachoMenuGroup(tab, "Self", leftX, topY, leftX + ColumnWidth, topY + totalRightHeight)
+
+    local SectionTwo = MachoMenuGroup(tab, "Model Changer", rightX, topY, rightX + ColumnWidth, topY + HalfHeight)
+    local SectionThree = MachoMenuGroup(tab, "Functions", rightX, midY, rightX + ColumnWidth, midY + HalfHeight)
+
+    return SectionOne, SectionTwo, SectionThree
 end
 
--- Self: two columns — Toggles (left, tall) | Model + Functions (right, stacked)
-local function SelfTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local my = ty + HalfHeight + SectionsPadding
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Toggles",    lx, ty, lx + ColumnWidth, ty + (HalfHeight * 2) + SectionsPadding)
-    local S2 = MachoMenuGroup(tab, "Model",       rx, ty, rx + ColumnWidth, ty + HalfHeight)
-    local S3 = MachoMenuGroup(tab, "Functions",   rx, my, rx + ColumnWidth, my + HalfHeight)
-    return S1, S2, S3
+local function ServerTabContent(tab)
+    local EachSectionWidth = (SectionChildWidth - (SectionsPadding * 3)) / 2
+    local SectionOneStartX = TabsBarWidth + SectionsPadding
+    local SectionOneEndX = SectionOneStartX + EachSectionWidth
+    local SectionOne = MachoMenuGroup(tab, "Player", SectionOneStartX, SectionsPadding + MachoPanelGap, SectionOneEndX, SectionChildHeight)
+
+    local SectionTwoStartX = SectionOneEndX + SectionsPadding
+    local SectionTwoEndX = SectionTwoStartX + EachSectionWidth
+    local SectionTwo = MachoMenuGroup(tab, "Everyone", SectionTwoStartX, SectionsPadding + MachoPanelGap, SectionTwoEndX, SectionChildHeight)
+
+    return SectionOne, SectionTwo
 end
 
--- Weapons: two columns — Mods (left) | Spawner (right)
-local function WeaponTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Mods",    lx, ty, lx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    local S2 = MachoMenuGroup(tab, "Spawner", rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2
+local function TeleportTabContent(tab)
+    local EachSectionWidth = (SectionChildWidth - (SectionsPadding * 3)) / 2
+    local SectionOneStartX = TabsBarWidth + SectionsPadding
+    local SectionOneEndX = SectionOneStartX + EachSectionWidth
+    local SectionOne = MachoMenuGroup(tab, "Teleport", SectionOneStartX, SectionsPadding + MachoPanelGap, SectionOneEndX, SectionChildHeight)
+
+    local SectionTwoStartX = SectionOneEndX + SectionsPadding
+    local SectionTwoEndX = SectionTwoStartX + EachSectionWidth
+    local SectionTwo = MachoMenuGroup(tab, "Other", SectionTwoStartX, SectionsPadding + MachoPanelGap, SectionTwoEndX, SectionChildHeight)
+
+    return SectionOne, SectionTwo
 end
 
--- Vehicle: two columns — Mods (left) | Actions (right)
-local function VehicleTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Mods",    lx, ty, lx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    local S2 = MachoMenuGroup(tab, "Actions", rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2
+local function WeaponTabContent(tab)
+    local leftX = TabsBarWidth + SectionsPadding
+    local topY = SectionsPadding + MachoPanelGap
+    local midY = topY + HalfHeight + SectionsPadding
+
+    local SectionOne = MachoMenuGroup(tab, "Mods", leftX, topY, leftX + ColumnWidth, topY + HalfHeight)
+    local SectionTwo = MachoMenuGroup(tab, "Spawner", leftX, midY, leftX + ColumnWidth, midY + HalfHeight)
+
+    local rightX = leftX + ColumnWidth + SectionsPadding
+    local SectionThree = MachoMenuGroup(tab, "Other", rightX, SectionsPadding + MachoPanelGap, rightX + ColumnWidth, SectionChildHeight)
+
+    return SectionOne, SectionTwo, SectionThree
 end
 
--- Server: two columns — Player (left) | Everyone (right)
-local function ServerTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Player",   lx, ty, lx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    local S2 = MachoMenuGroup(tab, "Everyone", rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2
+local function VehicleTabContent(tab)
+    local leftX = TabsBarWidth + SectionsPadding
+    local topY = SectionsPadding + MachoPanelGap
+    local midY = topY + HalfHeight + SectionsPadding
+
+    local SectionOne = MachoMenuGroup(tab, "Mods", leftX, topY, leftX + ColumnWidth, topY + HalfHeight)
+    local SectionTwo = MachoMenuGroup(tab, "Plate & Spawning", leftX, midY, leftX + ColumnWidth, midY + HalfHeight)
+
+    local rightX = leftX + ColumnWidth + SectionsPadding
+    local SectionThree = MachoMenuGroup(tab, "Other", rightX, SectionsPadding + MachoPanelGap, rightX + ColumnWidth, SectionChildHeight)
+
+    return SectionOne, SectionTwo, SectionThree
 end
 
--- Teleport: two columns — Locations (left) | Custom (right)
-local function TeleportTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Locations", lx, ty, lx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    local S2 = MachoMenuGroup(tab, "Other",     rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2
+local function EmoteTabContent(tab)
+    local EachSectionWidth = (SectionChildWidth - (SectionsPadding * 3)) / 2
+    local SectionOneStartX = TabsBarWidth + SectionsPadding
+    local SectionOneEndX = SectionOneStartX + EachSectionWidth
+    local SectionOne = MachoMenuGroup(tab, "Animations", SectionOneStartX, SectionsPadding + MachoPanelGap, SectionOneEndX, SectionChildHeight)
+
+    local SectionTwoStartX = SectionOneEndX + SectionsPadding
+    local SectionTwoEndX = SectionTwoStartX + EachSectionWidth
+    local SectionTwo = MachoMenuGroup(tab, "Force Emotes", SectionTwoStartX, SectionsPadding + MachoPanelGap, SectionTwoEndX, SectionChildHeight)
+
+    return SectionOne, SectionTwo
 end
 
--- Animations: two columns — Force Emotes (left) | Emote List (right)
-local function AnimTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Force Emotes", lx, ty, lx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    local S2 = MachoMenuGroup(tab, "Emote List",   rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2
+local function EventTabContent(tab)
+    local leftX = TabsBarWidth + SectionsPadding
+    local topY = SectionsPadding + MachoPanelGap
+    local midY = topY + HalfHeight + SectionsPadding
+
+    local SectionOne = MachoMenuGroup(tab, "Item Spawner", leftX, topY, leftX + ColumnWidth, topY + HalfHeight)
+    local SectionTwo = MachoMenuGroup(tab, "Money Spawner", leftX, midY, leftX + ColumnWidth, midY + HalfHeight)
+
+    local rightX = leftX + ColumnWidth + SectionsPadding
+    local SectionThree = MachoMenuGroup(tab, "Exploits", rightX, topY, rightX + ColumnWidth, topY + HalfHeight)
+    local SectionFour = MachoMenuGroup(tab, "Empty", rightX, midY, rightX + ColumnWidth, midY + HalfHeight)
+
+    return SectionOne, SectionTwo, SectionThree, SectionFour
 end
 
--- Triggers: two columns — Items/Money (left) | Exploits (right)
-local function TriggersTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local my = ty + HalfHeight + SectionsPadding
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Item Spawner",  lx, ty, lx + ColumnWidth, ty + HalfHeight)
-    local S2 = MachoMenuGroup(tab, "Money Spawner", lx, my, lx + ColumnWidth, my + HalfHeight)
-    local S3 = MachoMenuGroup(tab, "Exploits",      rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2, S3
+local function VIPTabContent(tab)
+    local leftX = TabsBarWidth + SectionsPadding
+    local topY = SectionsPadding + MachoPanelGap
+
+    -- Left column - Item Spawner (smaller box)
+    local SectionOne = MachoMenuGroup(tab, "Item Spawner", leftX, topY, leftX + ColumnWidth, topY + HalfHeight)
+    
+    -- Right column - Dirty Money Spawner (smaller box)
+    local rightX = leftX + ColumnWidth + SectionsPadding
+    local SectionTwo = MachoMenuGroup(tab, "Dirty Money", rightX, topY, rightX + ColumnWidth, topY + HalfHeight)
+
+    return SectionOne, SectionTwo
 end
 
--- VIP: two columns — Items (left) | Dirty Money (right)
-local function VipTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Item Spawner", lx, ty, lx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    local S2 = MachoMenuGroup(tab, "Dirty Money",  rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2
-end
+local function SettingTabContent(tab)
+    local leftX = TabsBarWidth + SectionsPadding
+    local topY = SectionsPadding + MachoPanelGap
+    local midY = topY + HalfHeight + SectionsPadding
 
--- Settings: two columns — General (left) | Server Info (right)
-local function SettingTabLayout(tab)
-    local lx = TabsBarWidth + SectionsPadding
-    local ty = SectionsPadding + MachoPanelGap
-    local my = ty + HalfHeight + SectionsPadding
-    local rx = lx + ColumnWidth + SectionsPadding
-    local S1 = MachoMenuGroup(tab, "Menu",          lx, ty, lx + ColumnWidth, ty + HalfHeight)
-    local S2 = MachoMenuGroup(tab, "Design",        lx, my, lx + ColumnWidth, my + HalfHeight)
-    local S3 = MachoMenuGroup(tab, "Server Info",   rx, ty, rx + ColumnWidth, ty + SectionChildHeight - (SectionsPadding * 2) - MachoPanelGap)
-    return S1, S2, S3
+    local SectionOne = MachoMenuGroup(tab, "Unload", leftX, topY, leftX + ColumnWidth, topY + HalfHeight)
+    local SectionTwo = MachoMenuGroup(tab, "Menu Design", leftX, midY, leftX + ColumnWidth, midY + HalfHeight)
+
+    local rightX = leftX + ColumnWidth + SectionsPadding
+    local SectionThree = MachoMenuGroup(tab, "Server Settings", rightX, SectionsPadding + MachoPanelGap, rightX + ColumnWidth, SectionChildHeight)
+
+    return SectionOne, SectionTwo, SectionThree
 end
--- Section Instances
-local Self      = { SelfTabLayout(SelfTab) }
-local Server    = { ServerTabLayout(ServerTab) }
-local Weapon    = { WeaponTabLayout(WeaponTab) }
-local Vehicle   = { VehicleTabLayout(VehicleTab) }
-local Teleport  = { TeleportTabLayout(TeleportTab) }
-local Anim      = { AnimTabLayout(AnimTab) }
-local Triggers  = { TriggersTabLayout(TriggersTab) }
-local Vip       = { VipTabLayout(VipTab) }
-local Setting   = { SettingTabLayout(SettingTab) }
+-- Tab Sections
+local PlayerTabSections = { PlayerTabContent(PlayerTab) }
+local ServerTabSections = { ServerTabContent(ServerTab) }
+local TeleportTabSections = { TeleportTabContent(TeleportTab) }
+local WeaponTabSections = { WeaponTabContent(WeaponTab) }
+local VehicleTabSections = { VehicleTabContent(VehicleTab) }
+local EmoteTabSections = { EmoteTabContent(EmoteTab) }
+local EventTabSections = { EventTabContent(EventTab) }
+local VIPTabSections = { VIPTabContent(VipTab) }
+local SettingTabSections = { SettingTabContent(SettingTab) }
+
 -- Functions
 local function CheckResource(resource)
     return GetResourceState(resource) == "started"
@@ -286,13 +328,8 @@ MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxm
     local zXcVbNmQwErTyUi = false -- 
 ]])
 
-
--- ═══════════════════════════════════════════════════════
---  SELF TAB
--- ═══════════════════════════════════════════════════════
-
--- [ Toggles ]
-MachoMenuCheckbox(Self[1], "Godmode (DETECTABLE)", function()
+-- Features
+MachoMenuCheckbox(PlayerTabSections[1], "Godmode (DETECTABLE)", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if aXfPlMnQwErTyUi == nil then aXfPlMnQwErTyUi = false end
         aXfPlMnQwErTyUi = true
@@ -361,7 +398,7 @@ end, function()
     ]])
 end)
 
--- MachoMenuCheckbox(Self[1], "Godmode (DETECTABLE)", function()
+-- MachoMenuCheckbox(PlayerTabSections[1], "Godmode (DETECTABLE)", function()
 --     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
 --         if aXfPlMnQwErTyUi == nil then aXfPlMnQwErTyUi = false end
 --         aXfPlMnQwErTyUi = true
@@ -416,7 +453,7 @@ end)
 --     ]])
 -- end)
 
-MachoMenuCheckbox(Self[1], "Invisibility", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Invisibility", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if sRtYuIoPaSdFgHj == nil then sRtYuIoPaSdFgHj = false end
         sRtYuIoPaSdFgHj = true
@@ -456,7 +493,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "No Ragdoll", function()
+MachoMenuCheckbox(PlayerTabSections[1], "No Ragdoll", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if mKjHgFdSaPlMnBv == nil then mKjHgFdSaPlMnBv = false end
         mKjHgFdSaPlMnBv = true
@@ -480,7 +517,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Infinite Stamina", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Infinite Stamina", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if uYtReWqAzXcVbNm == nil then uYtReWqAzXcVbNm = false end
         uYtReWqAzXcVbNm = true
@@ -505,7 +542,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Tiny Ped (DETECTABLE)", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Tiny Ped (DETECTABLE)", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if peqCrVzHDwfkraYZ == nil then peqCrVzHDwfkraYZ = false end
         peqCrVzHDwfkraYZ = true
@@ -531,7 +568,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "No Clip (DETECTABLE)", function()
+MachoMenuCheckbox(PlayerTabSections[1], "No Clip (DETECTABLE)", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if NpYgTbUcXsRoVm == nil then NpYgTbUcXsRoVm = false end
         NpYgTbUcXsRoVm = true
@@ -618,703 +655,205 @@ end, function()
     ]])
 end)
 
--- [ Free Camera — wiped system: TP Cam, Teleport, Shoot, Shoot Car, Spawn Bomb, Blackhole, Kick Veh, Delete Veh, Fuck Veh, RC Control Car ]
--- Controls: WASD = move | Mouse = look | LMB = action | Scroll = cycle features | Shift = speed boost
-_G.freecamSpeed = _G.freecamSpeed or 1.2
+MachoMenuCheckbox(PlayerTabSections[1], "Free Camera", function()
+    MachoInjectResource((CheckResource("core") and "core") or (CheckResource("es_extended") and "es_extended") or (CheckResource("qb-core") and "qb-core") or (CheckResource("monitor") and "monitor") or "any", [[
+        
+        g_FreecamFeatureEnabled = true
+        
+        local function initializeFreecam()
+            -- Script State
+            local isFreecamActive = false
+            local freecamHandle = nil
+            local targetCoords, targetEntity = nil, nil
+            local currentFeatureIndex = 1
 
-local function GetFreecamResource()
-    if CheckResource("es_extended") then return "es_extended"
-    elseif CheckResource("ox_lib") then return "ox_lib"
-    elseif CheckResource("qb-core") then return "qb-core"
-    elseif CheckResource("oxmysql") then return "oxmysql"
-    elseif CheckResource("monitor") then return "monitor"
-    else return "any" end
-end
+            -- NEW FEATURE: Ped Spawning State
+            local pedsToSpawn = { "s_m_m_movalien_01", "u_m_y_zombie_01", "s_m_y_blackops_01", "csb_abigail", "a_c_coyote" }
+            local currentPedIndex = 1
 
-local function EnableFreecam()
-    local leftControl, rightControl = 174, 175
-    local freecamSpeedValue = _G.freecamSpeed or 1.2
-    local code = string.format([[
-        local function decode(tbl)
-            local s = ""
-            for i = 1, #tbl do s = s .. string.char(tbl[i]) end
-            return s
-        end
+            local stopFreecam, startFreecam
 
-        local function g(n)
-            return _G[decode(n)]
-        end
-
-        local function _b(str)
-            local t = {}
-            for i = 1, #str do t[i] = string.byte(str, i) end
-            return t
-        end
-
-        local function _g(n)
-            return _G[decode(n)]
-        end
-
-        local function wait(n)
-            return Citizen.Wait(n)
-        end
-
-        local FREECAM_LEFT_CONTROL  = %d
-        local FREECAM_RIGHT_CONTROL = %d
-
-        local nativeNames = {
-            PlayerPedId = {80,108,97,121,101,114,80,101,100,73,100},
-            GetEntityCoords = {71,101,116,69,110,116,105,116,121,67,111,111,114,100,115},
-            IsVehicleSeatFree = {73,115,86,101,104,105,99,108,101,83,101,97,116,70,114,101,101},
-            IsEntityAVehicle = {73,115,69,110,116,105,116,121,65,86,101,104,105,99,108,101},
-            SetEntityCoords = {83,101,116,69,110,116,105,116,121,67,111,111,114,100,115},
-            GetCamCoord = {71,101,116,67,97,109,67,111,111,114,100},
-            GetCamRot = {71,101,116,67,97,109,82,111,116},
-            GetControlNormal = {71,101,116,67,111,110,116,114,111,108,78,111,114,109,97,108},
-            IsDisabledControlPressed = {73,115,68,105,115,97,98,108,101,100,67,111,110,116,114,111,108,80,114,101,115,115,101,100},
-            IsControlJustPressed = {73,115,67,111,110,116,114,111,108,74,117,115,116,80,114,101,115,115,101,100},
-            IsDisabledControlJustPressed = {73,115,68,105,115,97,98,108,101,100,67,111,110,116,114,111,108,74,117,115,116,80,114,101,115,115,101,100},
-            GetResourceState = {71,101,116,82,101,115,111,117,114,99,101,83,116,97,116,101},
-            GetGamePool = {71,101,116,71,97,109,101,80,111,111,108},
-            IsPedDeadOrDying = {73,115,80,101,100,68,101,97,100,79,114,68,121,105,110,103},
-            IsPedAPlayer = {73,115,80,101,100,65,80,108,97,121,101,114},
-            SetEntityAsMissionEntity = {83,101,116,69,110,116,105,116,121,65,115,77,105,115,115,105,111,110,69,110,116,105,116,121},
-            SetVehicleEngineOn = {83,101,116,86,101,104,105,99,108,101,69,110,103,105,110,101,79,110},
-            DoesEntityExist = {68,111,101,115,69,110,116,105,116,121,69,120,105,115,116},
-            CreateThread = {67,114,101,97,116,101,84,104,114,101,97,100},
-            DisableControlAction = {68,105,115,97,98,108,101,67,111,110,116,114,111,108,65,99,116,105,111,110},
-            EnableControlAction = {69,110,97,98,108,101,67,111,110,116,114,111,108,65,99,116,105,111,110},
-            RequestModel = {82,101,113,117,101,115,116,77,111,100,101,108},
-            HasModelLoaded = {72,97,115,77,111,100,101,108,76,111,97,100,101,100},
-            SetModelAsNoLongerNeeded = {83,101,116,77,111,100,101,108,65,115,78,111,76,111,110,103,101,114,78,101,101,100,101,100},
-            GetPedInVehicleSeat = {71,101,116,80,101,100,73,110,86,101,104,105,99,108,101,83,101,97,116},
-            TaskLeaveVehicle = {84,97,115,107,76,101,97,118,101,86,101,104,105,99,108,101},
-            SetPedCanRagdoll = {83,101,116,80,101,100,67,97,110,82,97,103,100,111,108,108},
-            SetPedToRagdoll = {83,101,116,80,101,100,84,111,82,97,103,100,111,108,108},
-            NetworkRequestControlOfEntity = {78,101,116,119,111,114,107,82,101,113,117,101,115,116,67,111,110,116,114,111,108,79,102,69,110,116,105,116,121},
-            Wait = {87,97,105,116},
-            DeleteEntity = {68,101,108,101,116,101,69,110,116,105,116,121},
-            DeleteVehicle = {68,101,108,101,116,101,86,101,104,105,99,108,101},
-            SetVehicleTyreBurst = {83,101,116,86,101,104,105,99,108,101,84,121,114,101,66,117,114,115,116},
-            SetVehicleEngineHealth = {83,101,116,86,101,104,105,99,108,101,69,110,103,105,110,101,72,101,97,108,116,104},
-            SetVehicleDoorBroken = {83,101,116,86,101,104,105,99,108,101,68,111,111,114,66,114,111,107,101,110},
-            SmashVehicleWindow = {83,109,97,115,104,86,101,104,105,99,108,101,87,105,110,100,111,119},
-            StartEntityFire = {83,116,97,114,116,69,110,116,105,116,121,70,105,114,101},
-            NetworkExplodeVehicle = {78,101,116,119,111,114,107,69,120,112,108,111,100,101,86,101,104,105,99,108,101},
-            CreateObjectNoOffset = {67,114,101,97,116,101,79,98,106,101,99,116,78,111,79,102,102,115,101,116},
-            NetworkRegisterEntityAsNetworked = {78,101,116,119,111,114,107,82,101,103,105,115,116,101,114,69,110,116,105,116,121,65,115,78,101,116,119,111,114,107,101,100},
-            ObjToNet = {79,98,106,84,111,78,101,116},
-            SetNetworkIdExistsOnAllMachines = {83,101,116,78,101,116,119,111,114,107,73,100,69,120,105,115,116,115,79,110,65,108,108,77,97,99,104,105,110,101,115},
-            SetNetworkIdCanMigrate = {83,101,116,78,101,116,119,111,114,107,73,100,67,97,110,77,105,103,114,97,116,101},
-            PlaceObjectOnGroundProperly = {80,108,97,99,101,79,98,106,101,99,116,79,110,71,114,111,117,110,100,80,114,111,112,101,114,108,121},
-            SetEntityVisible = {83,101,116,69,110,116,105,116,121,86,105,115,105,98,108,101},
-            SetEntityCollision = {83,101,116,69,110,116,105,116,121,67,111,108,108,105,115,105,111,110},
-            FreezeEntityPosition = {70,114,101,101,122,101,69,110,116,105,116,121,80,111,115,105,116,105,111,110},
-            DeleteObject = {68,101,108,101,116,101,79,98,106,101,99,116},
-            GetGameTimer = {71,101,116,71,97,109,101,84,105,109,101,114},
-            CreateCam = {67,114,101,97,116,101,67,97,109},
-            AttachCamToEntity = {65,116,116,97,99,104,67,97,109,84,111,69,110,116,105,116,121},
-            GetEntitySpeed = {71,101,116,69,110,116,105,116,121,83,112,101,101,100},
-            GetEntityHeading = {71,101,116,69,110,116,105,116,121,72,101,97,100,105,110,103},
-            SetEntityHeading = {83,101,116,69,110,116,105,116,121,72,101,97,100,105,110,103},
-            GetGroundZFor_3dCoord = {71,101,116,71,114,111,117,110,100,90,70,111,114,95,51,100,67,111,111,114,100},
-            GetEntityVelocity = {71,101,116,69,110,116,105,116,121,86,101,108,111,99,105,116,121},
-            SetVehicleOnGroundProperly = {83,101,116,86,101,104,105,99,108,101,79,110,71,114,111,117,110,100,80,114,111,112,101,114,108,121},
-            IsControlPressed = {73,115,67,111,110,116,114,111,108,80,114,101,115,115,101,100},
-            SetEntityInvincible = {83,101,116,69,110,116,105,116,121,73,110,118,105,110,99,105,98,108,101},
-            SetEntityCanBeDamaged = {83,101,116,69,110,116,105,116,121,67,97,110,66,101,68,97,109,97,103,101,100},
-            SetVehicleCanBeVisiblyDamaged = {83,101,116,86,101,104,105,99,108,101,67,97,110,66,101,86,105,115,105,98,108,121,68,97,109,97,103,101,100},
-            SetTextFont = {83,101,116,84,101,120,116,70,111,110,116},
-            SetTextProportional = {83,101,116,84,101,120,116,80,114,111,112,111,114,116,105,111,110,97,108},
-            SetTextScale = {83,101,116,84,101,120,116,83,99,97,108,101},
-            SetTextDropshadow = {83,101,116,84,101,120,116,68,114,111,112,115,104,97,100,111,119},
-            SetTextEdge = {83,101,116,84,101,120,116,69,100,103,101},
-            SetTextOutline = {83,101,116,84,101,120,116,79,117,116,108,105,110,101},
-            SetTextCentre = {83,101,116,84,101,120,116,67,101,110,116,114,101},
-            SetTextColour = {83,101,116,84,101,120,116,67,111,108,111,117,114},
-            BeginTextCommandDisplayText = {66,101,103,105,110,84,101,120,116,67,111,109,109,97,110,100,68,105,115,112,108,97,121,84,101,120,116},
-            AddTextComponentSubstringPlayerName = {65,100,100,84,101,120,116,67,111,109,112,111,110,101,110,116,83,117,98,115,116,114,105,110,103,80,108,97,121,101,114,78,97,109,101},
-            EndTextCommandDisplayText = {69,110,100,84,101,120,116,67,111,109,109,97,110,100,68,105,115,112,108,97,121,84,101,120,116},
-            SetFocusPosAndVel = {83,101,116,70,111,99,117,115,80,111,115,65,110,100,86,101,108},
-            SetFocusEntity = {83,101,116,70,111,99,117,115,69,110,116,105,116,121},
-            RenderScriptCams = {82,101,110,100,101,114,83,99,114,105,112,116,67,97,109,115},
-            SetCamCoord = {83,101,116,67,97,109,67,111,111,114,100},
-            SetCamRot = {83,101,116,67,97,109,82,111,116},
-            SetCamActive = {83,101,116,67,97,109,65,99,116,105,118,101},
-            DestroyCam = {68,101,115,116,114,111,121,67,97,109},
-            TaskStandStill = {84,97,115,107,83,116,97,110,100,83,116,105,108,108},
-            GiveWeaponToPed = {71,105,118,101,87,101,97,112,111,110,84,111,80,101,100},
-            SetCurrentPedWeapon = {83,101,116,67,117,114,114,101,110,116,80,101,100,87,101,97,112,111,110},
-            ShootSingleBulletBetweenCoords = {83,104,111,111,116,83,105,110,103,108,101,66,117,108,108,101,116,66,101,116,119,101,101,110,67,111,111,114,100,115},
-            GetHashKey = {71,101,116,72,97,115,104,75,101,121},
-            StartExpensiveSynchronousShapeTestLosProbe = {83,116,97,114,116,69,120,112,101,110,115,105,118,101,83,121,110,99,104,114,111,110,111,117,115,83,104,97,112,101,84,101,115,116,76,111,115,80,114,111,98,101},
-            GetShapeTestResult = {71,101,116,83,104,97,112,101,84,101,115,116,82,101,115,117,108,116},
-        }
-
-        if not _G.wipedFreecam then
-            _G.wipedFreecam = {
-                isToggled = false,
-                camera = nil,
-                cameraSpeed = %f,
-                cameraFeatures = { "TP Camera", "Teleport", "Shoot", "Shoot Car", "Spawn Bomb", "Blackhole", "Kick Vehicle", "Delete Vehicle", "Fuck Vehicle", "RC Control Car" },
-                shootFeatures = { ["Shoot"] = true, ["Shoot Car"] = true, ["Spawn Bomb"] = true },
-                pistolModels = {
-                    { label = "Perm Kill", model = decode({119,101,97,112,111,110,95,116,114,97,110,113,117,105,108,105,122,101,114}) },
-                    { label = "Pistol", model = decode({119,101,97,112,111,110,95,112,105,115,116,111,108}) },
-                    { label = "Heavy Pistol", model = decode({119,101,97,112,111,110,95,104,101,97,118,121,112,105,115,116,111,108}) },
-                    { label = "Combat Pistol", model = decode({119,101,97,112,111,110,95,99,111,109,98,97,116,112,105,115,116,111,108}) },
-                    { label = "AP Pistol", model = decode({119,101,97,112,111,110,95,97,112,112,105,115,116,111,108}) },
-                    { label = "Stun Gun", model = decode({119,101,97,112,111,110,95,115,116,117,110,103,117,110}) },
-                    { label = "Firework Launcher", model = decode({119,101,97,112,111,110,95,102,105,114,101,119,111,114,107}) }
-                },
-                vehicleModels = {
-                    { label = "Nimbus", model = decode({110,105,109,98,117,115}) },
-                    { label = "Luxor", model = decode({108,117,120,111,114}) },
-                    { label = "Luxor2", model = decode({108,117,120,111,114,50}) },
-                    { label = "Elegy", model = decode({101,108,101,103,121}) },
-                    { label = "Pounder", model = decode({112,111,117,110,100,101,114}) },
-                    { label = "Adder", model = decode({97,100,100,101,114}) },
-                    { label = "Zentorno", model = decode({122,101,110,116,111,114,110,111}) },
-                    { label = "T20", model = decode({116,50,48}) },
-                    { label = "Osiris", model = decode({111,115,105,114,105,115}) },
-                    { label = "X80 Proto", model = decode({120,56,48,112,114,111,116,111}) },
-                    { label = "Tyrus", model = decode({116,121,114,117,115}) },
-                    { label = "Vagner", model = decode({118,97,103,110,101,114}) },
-                    { label = "Entity XF", model = decode({101,110,116,105,116,121,120,102}) },
-                    { label = "Infernus", model = decode({105,110,102,101,114,110,117,115}) },
-                    { label = "Riot2", model = decode({114,105,111,116,50}) },
-                    { label = "Kosatka", model = decode({107,111,115,97,116,107,97}) }
-                },
-                currentFeature = 1,
-                currentModelIndex = 1,
-                currentVehicleIndex = 1,
-                currentExplosionIndex = 1,
-                explosionTypes = {
-                    { label = "Default", type = "default" },
-                    { label = "Car", type = "car" },
-                    { label = "Plane", type = "plane" },
-                    { label = "Boat", type = "boat" },
-                    { label = "Heli", type = "heli" }
-                },
-                cameraReady = false,
-                cachedFeature = "",
-                cachedModelLabel = "",
-                shutdown = false,
-                smoothScrollOffset = 0.0,
-                savedFeature = 1,
-                blackholePressed = false,
-                blackholeFrameCount = 0,
-                blackholeControlledVehicles = {}
+            -- Feature Definitions (Now with Ped Spawner)
+            local Features = { 
+                "Look-Around", 
+                "Spawn Ped",         -- ADDED
+                "Teleport", 
+                "Delete Entity", 
+                "Fling Entity", 
+                "Flip Vehicle", 
+                "Launch Vehicle",
+                "Teleport Vehicle",
+                "Mess With Vehicle"
             }
 
-            function _G.wipedFreecam.tableFind(tbl, val)
-                for i, v in ipairs(tbl) do
-                    if v == val then return i end
-                end
-                return nil
+            -- Helper Function for Drawing Text
+            local function drawText(content, x, y, options)
+                SetTextFont(options.font or 4)
+                SetTextScale(0.0, options.scale or 0.3)
+                SetTextColour(options.color[1], options.color[2], options.color[3], options.color[4])
+                SetTextOutline()
+                if options.shadow then SetTextDropShadow(2, 0, 0, 0, 255) end
+                SetTextCentre(true)
+                BeginTextCommandDisplayText("STRING")
+                AddTextComponentSubstringPlayerName(content)
+                EndTextCommandDisplayText(x, y)
             end
 
-            function _G.wipedFreecam.GetEmptySeat(vehicle)
-                local seats = { -1, 0, 1, 2 }
-                for _, seat in ipairs(seats) do
-                    if g(nativeNames.IsVehicleSeatFree)(vehicle, seat) then
-                        return seat
-                    end
-                end
-                return -1
-            end
+            -- Main Draw Thread (UI Only)
+            local function drawThread()
+                while isFreecamActive do
+                    Wait(0)
+                    -- Draw Crosshair
+                    drawText("•", 0.5, 0.485, {font = 4, scale = 0.5, color = {255,255,255,200}})
+                    
+                    -- ##### UI FIX: SCROLLING MENU LOGIC #####
+                    local ui = { x = 0.5, y = 0.75, lineHeight = 0.03, maxVisible = 7, colors = { text = {245, 245, 245, 120}, selected = {52, 152, 219, 255} } }
+                    local numFeatures = #Features
+                    local startIdx, endIdx = 1, numFeatures
 
-            function _G.wipedFreecam.RotationToDirection(rot)
-                local radiansZ = math.rad(rot.z)
-                local radiansX = math.rad(rot.x)
-                local cosX = math.cos(radiansX)
-                return vector3(-math.sin(radiansZ) * cosX, math.cos(radiansZ) * cosX, math.sin(radiansX))
-            end
-
-            function _G.wipedFreecam.drawCrosshair()
-                g(nativeNames.SetTextFont)(0)
-                g(nativeNames.SetTextProportional)(1)
-                g(nativeNames.SetTextScale)(0.3, 0.3)
-                g(nativeNames.SetTextColour)(255, 255, 255, 255)
-                g(nativeNames.SetTextCentre)(true)
-                g(nativeNames.SetTextOutline)()
-                g(nativeNames.BeginTextCommandDisplayText)(decode({83,84,82,73,78,71}))
-                g(nativeNames.AddTextComponentSubstringPlayerName)("+")
-                g(nativeNames.EndTextCommandDisplayText)(0.5, 0.49)
-            end
-
-            function _G.wipedFreecam.lerp(a, b, t)
-                return a + (b - a) * t
-            end
-
-            function _G.wipedFreecam.drawFeatureList()
-                local centerX = 0.5
-                local baseY = 0.80
-                local lineHeight = 0.025
-                local scale = 0.25
-                local maxVisible = 7
-                local lerpFactor = 0.20
-
-                _G.wipedFreecam.smoothScrollOffset = _G.wipedFreecam.lerp(_G.wipedFreecam.smoothScrollOffset, 0.0, lerpFactor)
-
-                local currentIndex = _G.wipedFreecam.currentFeature
-                local startIndex = math.max(1, currentIndex - math.floor(maxVisible / 2))
-                local endIndex = math.min(#_G.wipedFreecam.cameraFeatures, startIndex + maxVisible - 1)
-
-                if endIndex - startIndex < maxVisible - 1 then
-                    startIndex = math.max(1, endIndex - maxVisible + 1)
-                end
-
-                for i = startIndex, endIndex do
-                    local feature = _G.wipedFreecam.cameraFeatures[i]
-                    local distanceFromSelected = math.abs(i - currentIndex)
-                    local yOffset = (i - currentIndex) * lineHeight + _G.wipedFreecam.smoothScrollOffset
-                    local yPos = baseY + yOffset
-
-                    g(nativeNames.SetTextFont)(0)
-                    g(nativeNames.SetTextProportional)(1)
-                    g(nativeNames.SetTextScale)(scale, scale)
-                    g(nativeNames.SetTextDropshadow)(0, 0, 0, 0, 255)
-                    g(nativeNames.SetTextEdge)(1, 0, 0, 0, 255)
-                    g(nativeNames.SetTextOutline)()
-                    g(nativeNames.SetTextCentre)(true)
-
-                    local alpha = 255
-                    if distanceFromSelected > 2 then
-                        alpha = math.max(150, 255 - (distanceFromSelected - 2) * 30)
-                    end
-
-                    if i == currentIndex then
-                        g(nativeNames.SetTextColour)(255, 0, 0, alpha)
-                        local text = "> " .. feature .. " <"
-                        if _G.wipedFreecam.shootFeatures[feature] then
-                            local currentModel
-                            if feature == "Shoot" then
-                                currentModel = _G.wipedFreecam.pistolModels[_G.wipedFreecam.currentModelIndex]
-                                text = "> " .. feature .. " [" .. currentModel.label .. "] <"
-                            elseif feature == "Shoot Car" then
-                                currentModel = _G.wipedFreecam.vehicleModels[_G.wipedFreecam.currentVehicleIndex]
-                                text = "> " .. feature .. " [" .. currentModel.label .. "] <"
-                            elseif feature == "Spawn Bomb" then
-                                local explosionType = _G.wipedFreecam.explosionTypes[_G.wipedFreecam.currentExplosionIndex]
-                                text = "> " .. feature .. " [" .. explosionType.label .. "] <"
-                            end
-                        end
-                        g(nativeNames.BeginTextCommandDisplayText)(decode({83,84,82,73,78,71}))
-                        g(nativeNames.AddTextComponentSubstringPlayerName)(text)
-                        g(nativeNames.EndTextCommandDisplayText)(centerX, yPos)
-                    else
-                        g(nativeNames.SetTextColour)(255, 255, 255, alpha)
-                        g(nativeNames.BeginTextCommandDisplayText)(decode({83,84,82,73,78,71}))
-                        g(nativeNames.AddTextComponentSubstringPlayerName)(feature)
-                        g(nativeNames.EndTextCommandDisplayText)(centerX, yPos)
-                    end
-                end
-            end
-
-            function _G.wipedFreecam.EnterCamera()
-                if _G.wipedFreecam.isToggled then return end
-                _G.wipedFreecam.isToggled = true
-
-                local playerPed = g(nativeNames.PlayerPedId)()
-                local coords = g(nativeNames.GetEntityCoords)(playerPed)
-                local heading = g(nativeNames.GetEntityHeading)(playerPed)
-
-                _G.wipedFreecam.camera = g(nativeNames.CreateCam)(decode({68,69,70,65,85,76,84,95,83,67,82,73,80,84,69,68,95,67,65,77,69,82,65}), true)
-                g(nativeNames.SetCamCoord)(_G.wipedFreecam.camera, coords.x, coords.y, coords.z + 2.0)
-                g(nativeNames.SetCamRot)(_G.wipedFreecam.camera, 0.0, 0.0, heading, 2)
-                g(nativeNames.SetCamActive)(_G.wipedFreecam.camera, true)
-                g(nativeNames.RenderScriptCams)(true, true, 500, true, true)
-
-                g(nativeNames.CreateThread)(function()
-                    while _G.wipedFreecam and _G.wipedFreecam.isToggled and not _G.wipedFreecam.shutdown do
-                        wait(0)
-                        if not _G.wipedFreecam or not _G.wipedFreecam.camera then break end
-
-                        local camCoords = g(nativeNames.GetCamCoord)(_G.wipedFreecam.camera)
-                        local camRot    = g(nativeNames.GetCamRot)(_G.wipedFreecam.camera, 2)
-                        local mouseX    = g(nativeNames.GetControlNormal)(0, 1) * 5.0
-                        local mouseY    = g(nativeNames.GetControlNormal)(0, 2) * 5.0
-                        local newRotX   = camRot.x - mouseY
-                        local newRotZ   = camRot.z - mouseX
-
-                        if newRotX >  89.0 then newRotX =  89.0 end
-                        if newRotX < -89.0 then newRotX = -89.0 end
-
-                        g(nativeNames.SetCamRot)(_G.wipedFreecam.camera, newRotX, 0.0, newRotZ, 2)
-
-                        local rot = g(nativeNames.GetCamRot)(_G.wipedFreecam.camera, 2)
-                        local pitch = math.rad(rot.x)
-                        local yaw   = math.rad(rot.z)
-                        local direction = vector3(
-                            -math.sin(yaw) * math.cos(pitch),
-                             math.cos(yaw) * math.cos(pitch),
-                             math.sin(pitch)
-                        )
-                        local right = vector3(direction.y, -direction.x, 0.0)
-
-                        local moveSpeed = _G.wipedFreecam.cameraSpeed
-                        if g(nativeNames.IsDisabledControlPressed)(0, 21) then moveSpeed = moveSpeed * 2.5 end
-
-                        if g(nativeNames.IsDisabledControlPressed)(0, 32) then camCoords = camCoords + (direction * moveSpeed) end
-                        if g(nativeNames.IsDisabledControlPressed)(0, 33) then camCoords = camCoords - (direction * moveSpeed) end
-                        if g(nativeNames.IsDisabledControlPressed)(0, 34) then camCoords = camCoords - (right    * moveSpeed) end
-                        if g(nativeNames.IsDisabledControlPressed)(0, 35) then camCoords = camCoords + (right    * moveSpeed) end
-
-                        g(nativeNames.SetFocusPosAndVel)(camCoords.x, camCoords.y, camCoords.z, 0.0, 0.0, 0.0)
-                        g(nativeNames.SetCamCoord)(_G.wipedFreecam.camera, camCoords.x, camCoords.y, camCoords.z)
-
-                        -- Raycast for targeting
-                        local destination = camCoords + direction * 1000.0
-                        local rayHandle = StartShapeTestRay(camCoords.x, camCoords.y, camCoords.z, destination.x, destination.y, destination.z, -1, -1, 0)
-                        local _, hit, endCoords, surfaceNormal, entityHit = g(nativeNames.GetShapeTestResult)(rayHandle)
-                        local coords = endCoords
-
-                        -- Crosshair
-                        _G.wipedFreecam.drawCrosshair()
-                        -- Feature list
-                        _G.wipedFreecam.drawFeatureList()
-
-                        -- Scroll to cycle features
-                        local prevFeature = _G.wipedFreecam.currentFeature
-                        if g(nativeNames.IsDisabledControlJustPressed)(0, 242) then
-                            _G.wipedFreecam.currentFeature = _G.wipedFreecam.currentFeature + 1
-                            if _G.wipedFreecam.currentFeature > #_G.wipedFreecam.cameraFeatures then
-                                _G.wipedFreecam.currentFeature = 1
-                            end
-                            _G.wipedFreecam.savedFeature = _G.wipedFreecam.currentFeature
-                        end
-                        if g(nativeNames.IsDisabledControlJustPressed)(0, 241) then
-                            _G.wipedFreecam.currentFeature = _G.wipedFreecam.currentFeature - 1
-                            if _G.wipedFreecam.currentFeature < 1 then
-                                _G.wipedFreecam.currentFeature = #_G.wipedFreecam.cameraFeatures
-                            end
-                            _G.wipedFreecam.savedFeature = _G.wipedFreecam.currentFeature
-                        end
-
-                        -- TP Camera
-                        if _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "TP Camera" then
-                            if hit and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                local currentRot = g(nativeNames.GetCamRot)(_G.wipedFreecam.camera, 2)
-                                local distance = math.sqrt((endCoords.x - camCoords.x)^2 + (endCoords.y - camCoords.y)^2 + (endCoords.z - camCoords.z)^2)
-                                if distance <= 500.0 then
-                                    g(nativeNames.SetCamCoord)(_G.wipedFreecam.camera, endCoords.x, endCoords.y, endCoords.z)
-                                    g(nativeNames.SetCamRot)(_G.wipedFreecam.camera, currentRot.x, currentRot.y, currentRot.z, 2)
-                                end
-                            end
-                        -- Teleport
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Teleport" then
-                            if hit and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                if entityHit ~= 0 and g(nativeNames.IsEntityAVehicle)(entityHit) then
-                                    local seat = _G.wipedFreecam.GetEmptySeat(entityHit)
-                                    g(nativeNames.TaskWarpPedIntoVehicle)(g(nativeNames.PlayerPedId)(), entityHit, seat >= 0 and seat or -1)
-                                else
-                                    g(nativeNames.SetEntityCoords)(g(nativeNames.PlayerPedId)(), endCoords.x, endCoords.y, endCoords.z, false, false, false, false)
-                                end
-                            end
-                        -- Shoot
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Shoot" then
-                            if g(nativeNames.IsControlJustPressed)(0, FREECAM_LEFT_CONTROL) then
-                                _G.wipedFreecam.currentModelIndex = _G.wipedFreecam.currentModelIndex - 1
-                                if _G.wipedFreecam.currentModelIndex < 1 then _G.wipedFreecam.currentModelIndex = #_G.wipedFreecam.pistolModels end
-                            elseif g(nativeNames.IsControlJustPressed)(0, FREECAM_RIGHT_CONTROL) then
-                                _G.wipedFreecam.currentModelIndex = _G.wipedFreecam.currentModelIndex + 1
-                                if _G.wipedFreecam.currentModelIndex > #_G.wipedFreecam.pistolModels then _G.wipedFreecam.currentModelIndex = 1 end
-                            end
-                            if g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                local playerPed2 = g(nativeNames.PlayerPedId)()
-                                local weaponHash = g(nativeNames.GetHashKey)(_G.wipedFreecam.pistolModels[_G.wipedFreecam.currentModelIndex].model)
-                                g(nativeNames.GiveWeaponToPed)(playerPed2, weaponHash, 255, false, true)
-                                g(nativeNames.SetCurrentPedWeapon)(playerPed2, weaponHash, true)
-                                local damage = (_G.wipedFreecam.pistolModels[_G.wipedFreecam.currentModelIndex].model == decode({119,101,97,112,111,110,95,115,116,117,110,103,117,110})) and 0 or 100
-                                g(nativeNames.ShootSingleBulletBetweenCoords)(
-                                    coords.x, coords.y, coords.z,
-                                    coords.x + direction.x * 500.0,
-                                    coords.y + direction.y * 500.0,
-                                    coords.z + direction.z * 500.0,
-                                    damage, true, weaponHash, playerPed2, true, false, 1000.0
-                                )
-                            end
-                        -- Shoot Car
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Shoot Car" then
-                            if g(nativeNames.IsControlJustPressed)(0, FREECAM_LEFT_CONTROL) then
-                                _G.wipedFreecam.currentVehicleIndex = _G.wipedFreecam.currentVehicleIndex - 1
-                                if _G.wipedFreecam.currentVehicleIndex < 1 then _G.wipedFreecam.currentVehicleIndex = #_G.wipedFreecam.vehicleModels end
-                            elseif g(nativeNames.IsControlJustPressed)(0, FREECAM_RIGHT_CONTROL) then
-                                _G.wipedFreecam.currentVehicleIndex = _G.wipedFreecam.currentVehicleIndex + 1
-                                if _G.wipedFreecam.currentVehicleIndex > #_G.wipedFreecam.vehicleModels then _G.wipedFreecam.currentVehicleIndex = 1 end
-                            end
-                            if g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                local from = g(nativeNames.GetCamCoord)(_G.wipedFreecam.camera)
-                                local rot2 = g(nativeNames.GetCamRot)(_G.wipedFreecam.camera, 2)
-                                local pitch2 = math.rad(rot2.x)
-                                local yaw2 = math.rad(rot2.z)
-                                local dir2 = vector3(-math.sin(yaw2)*math.cos(pitch2), math.cos(yaw2)*math.cos(pitch2), math.sin(pitch2))
-                                local model = _G.wipedFreecam.vehicleModels[_G.wipedFreecam.currentVehicleIndex].model
-                                local modelHash = g(nativeNames.GetHashKey)(model)
-                                g(nativeNames.RequestModel)(modelHash)
-                                local t2 = 0
-                                while not g(nativeNames.HasModelLoaded)(modelHash) and t2 < 100 do wait(10); t2 = t2 + 1 end
-                                if g(nativeNames.HasModelLoaded)(modelHash) then
-                                    local spawnCoords = from + dir2 * 3.0 + vector3(0, 0, 1.0)
-                                    local vehicleEntity = CreateVehicle(modelHash, spawnCoords.x, spawnCoords.y, spawnCoords.z, rot2.z, true, true)
-                                    if vehicleEntity and g(nativeNames.DoesEntityExist)(vehicleEntity) then
-                                        g(nativeNames.SetEntityAsMissionEntity)(vehicleEntity, true, true)
-                                        g(nativeNames.SetVehicleEngineOn)(vehicleEntity, true, true, false)
-                                        local targetPoint = from + dir2 * 500.0
-                                        g(nativeNames.CreateThread)(function()
-                                            wait(75)
-                                            if g(nativeNames.DoesEntityExist)(vehicleEntity) then
-                                                local sd = targetPoint - from
-                                                local dist = math.max(#sd, 1.0)
-                                                local nd = sd / dist
-                                                local baseForce = (model == "luxor" or model == "luxor2") and 320.0 or 220.0
-                                                local vBoost = (model == "luxor" or model == "luxor2") and 25.0 or 12.5
-                                                for i = 1, 3 do
-                                                    ApplyForceToEntity(vehicleEntity, 1, nd.x*baseForce, nd.y*baseForce, nd.z*baseForce+vBoost, 0,0,0, 0, false, true, true, false, true)
-                                                    wait(0)
-                                                end
-                                            end
-                                        end)
-                                        g(nativeNames.SetModelAsNoLongerNeeded)(modelHash)
-                                    end
-                                end
-                            end
-                        -- Spawn Bomb
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Spawn Bomb" then
-                            if g(nativeNames.IsControlJustPressed)(0, FREECAM_LEFT_CONTROL) then
-                                _G.wipedFreecam.currentExplosionIndex = _G.wipedFreecam.currentExplosionIndex - 1
-                                if _G.wipedFreecam.currentExplosionIndex < 1 then _G.wipedFreecam.currentExplosionIndex = #_G.wipedFreecam.explosionTypes end
-                            elseif g(nativeNames.IsControlJustPressed)(0, FREECAM_RIGHT_CONTROL) then
-                                _G.wipedFreecam.currentExplosionIndex = _G.wipedFreecam.currentExplosionIndex + 1
-                                if _G.wipedFreecam.currentExplosionIndex > #_G.wipedFreecam.explosionTypes then _G.wipedFreecam.currentExplosionIndex = 1 end
-                            end
-                            if hit and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                AddExplosion(endCoords.x, endCoords.y, endCoords.z, 6, 10.0, true, false, 1.0)
-                            end
-                        -- Blackhole
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Blackhole" then
-                            if hit then
-                                local isPressed = g(nativeNames.IsDisabledControlPressed)(0, 24)
-                                if isPressed then
-                                    local vehiclePool = g(nativeNames.GetGamePool)("CVehicle")
-                                    if vehiclePool then
-                                        for _, vehicle in pairs(vehiclePool) do
-                                            if vehicle and g(nativeNames.DoesEntityExist)(vehicle) and g(nativeNames.IsEntityAVehicle)(vehicle) then
-                                                local vc = g(nativeNames.GetEntityCoords)(vehicle)
-                                                local dx, dy, dz = coords.x-vc.x, coords.y-vc.y, coords.z-vc.z
-                                                local distSq = dx*dx+dy*dy+dz*dz
-                                                if distSq < 40000 then
-                                                    local dist = math.sqrt(distSq)
-                                                    local pull = math.min(350.0, 600.0/math.max(dist,1.0))
-                                                    g(nativeNames.NetworkRequestControlOfEntity)(vehicle)
-                                                    ApplyForceToEntity(vehicle, 3, dx/dist*pull, dy/dist*pull, dz/dist*pull, 0,0,0, 0, false, true, true, false, true)
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        -- Kick Vehicle
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Kick Vehicle" then
-                            if hit and entityHit ~= 0 and g(nativeNames.IsEntityAVehicle)(entityHit) and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                local driver = _g(_b("GetPedInVehicleSeat"))(entityHit, -1)
-                                if driver and driver ~= 0 and _g(_b("DoesEntityExist"))(driver) then
-                                    _g(_b("TaskLeaveVehicle"))(driver, entityHit, 0)
-                                    _g(_b("SetPedCanRagdoll"))(driver, true)
-                                    _g(_b("SetPedToRagdoll"))(driver, 1000, 1000, 0, 0, 0, 0)
-                                end
-                            end
-                        -- Delete Vehicle
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Delete Vehicle" then
-                            if hit and entityHit ~= 0 and g(nativeNames.IsEntityAVehicle)(entityHit) and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                _g(_b("NetworkRequestControlOfEntity"))(entityHit)
-                                _g(_b("Wait"))(100)
-                                _g(_b("SetEntityAsMissionEntity"))(entityHit, true, true)
-                                _g(_b("DeleteEntity"))(entityHit)
-                                _g(_b("DeleteVehicle"))(entityHit)
-                            end
-                        -- Fuck Vehicle
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "Fuck Vehicle" then
-                            if hit and entityHit ~= 0 and g(nativeNames.IsEntityAVehicle)(entityHit) and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                _g(_b("NetworkRequestControlOfEntity"))(entityHit)
-                                _g(_b("Wait"))(100)
-                                for i = 0, 7 do _g(_b("SetVehicleTyreBurst"))(entityHit, i, true, 1000.0) end
-                                _g(_b("SetVehicleEngineHealth"))(entityHit, -4000.0)
-                                for i = 0, 5 do _g(_b("SetVehicleDoorBroken"))(entityHit, i, true) end
-                                for i = 0, 7 do _g(_b("SmashVehicleWindow"))(entityHit, i) end
-                                _g(_b("StartEntityFire"))(entityHit)
-                            end
-                        -- RC Control Car
-                        elseif _G.wipedFreecam.cameraFeatures[_G.wipedFreecam.currentFeature] == "RC Control Car" then
-                            if hit and entityHit ~= 0 and g(nativeNames.IsEntityAVehicle)(entityHit) and g(nativeNames.IsDisabledControlJustPressed)(0, 24) then
-                                g(nativeNames.NetworkRequestControlOfEntity)(entityHit)
-                                wait(100)
-                                if _G.rcCarControlActive then
-                                    if _G.rcCameraControl ~= nil then
-                                        g(nativeNames.RenderScriptCams)(false, true, 1000, true, true)
-                                        g(nativeNames.DestroyCam)(_G.rcCameraControl, false)
-                                        _G.rcCameraControl = nil
-                                    end
-                                    _G.rcCarControlActive = false
-                                    _G.rcCarControl = nil
-                                end
-                                _G.rcCarControl = entityHit
-                                _G.rcCarControlActive = true
-                                _G.rcCarControlSpeed = 0.0
-                                g(nativeNames.SetEntityAsMissionEntity)(entityHit, true, true)
-                                g(nativeNames.SetEntityInvincible)(entityHit, true)
-                                g(nativeNames.SetVehicleEngineOn)(entityHit, true, true, false)
-                                g(nativeNames.FreezeEntityPosition)(entityHit, false)
-                                g(nativeNames.SetEntityCollision)(entityHit, true, true)
-                                g(nativeNames.SetEntityCanBeDamaged)(entityHit, false)
-                                g(nativeNames.SetVehicleCanBeVisiblyDamaged)(entityHit, false)
-                                g(nativeNames.SetVehicleOnGroundProperly)(entityHit)
-                                _G.rcCameraControl = g(nativeNames.CreateCam)(decode({68,69,70,65,85,76,84,95,83,67,82,73,80,84,69,68,95,67,65,77,69,82,65}), true)
-                                g(nativeNames.AttachCamToEntity)(_G.rcCameraControl, entityHit, 0.0, -2.5, 1.5, true)
-                                g(nativeNames.SetCamRot)(_G.rcCameraControl, -5.0, 0.0, g(nativeNames.GetEntityHeading)(entityHit), 2)
-                                g(nativeNames.SetCamActive)(_G.rcCameraControl, true)
-                                g(nativeNames.RenderScriptCams)(true, true, 1000, true, true)
-                                if _G.wipedFreecam and _G.wipedFreecam.camera then
-                                    g(nativeNames.SetCamActive)(_G.wipedFreecam.camera, false)
-                                end
-                            end
-                            if _G.rcCarControlActive and _G.rcCarControl ~= nil and g(nativeNames.DoesEntityExist)(_G.rcCarControl) then
-                                g(nativeNames.SetVehicleEngineOn)(_G.rcCarControl, true, true, false)
-                                g(nativeNames.SetEntityInvincible)(_G.rcCarControl, true)
-                                g(nativeNames.FreezeEntityPosition)(_G.rcCarControl, false)
-                                g(nativeNames.SetEntityHasGravity)(_G.rcCarControl, true)
-                                g(nativeNames.SetEntityCollision)(_G.rcCarControl, true, true)
-                                local fwd, bk, lt, rt, exit = 71, 72, 63, 64, 73
-                                local forward = g(nativeNames.IsControlPressed)(0, fwd) and 1.0 or (g(nativeNames.IsControlPressed)(0, bk) and -1.0 or 0.0)
-                                local steer   = g(nativeNames.IsControlPressed)(0, rt) and -1.0 or (g(nativeNames.IsControlPressed)(0, lt) and 1.0 or 0.0)
-                                local maxSpeed, acc, dec = 50.0, 2.5, 3.0
-                                if forward ~= 0.0 then
-                                    local ts = maxSpeed * forward
-                                    if forward > 0 then
-                                        _G.rcCarControlSpeed = math.min(_G.rcCarControlSpeed + acc, ts)
-                                    else
-                                        _G.rcCarControlSpeed = math.max(_G.rcCarControlSpeed - dec, ts)
-                                    end
-                                    SetVehicleForwardSpeed(_G.rcCarControl, _G.rcCarControlSpeed)
-                                    if steer ~= 0.0 and math.abs(_G.rcCarControlSpeed) > 1.0 then
-                                        local sf = math.min(math.abs(_G.rcCarControlSpeed)/20.0, 1.0)
-                                        g(nativeNames.SetEntityHeading)(_G.rcCarControl, g(nativeNames.GetEntityHeading)(_G.rcCarControl) + steer*sf*4.5)
-                                    end
-                                else
-                                    if math.abs(_G.rcCarControlSpeed) > 0.1 then
-                                        _G.rcCarControlSpeed = _G.rcCarControlSpeed > 0 and math.max(_G.rcCarControlSpeed-dec,0) or math.min(_G.rcCarControlSpeed+dec,0)
-                                        SetVehicleForwardSpeed(_G.rcCarControl, _G.rcCarControlSpeed)
-                                    else
-                                        _G.rcCarControlSpeed = 0.0
-                                    end
-                                end
-                                if g(nativeNames.IsControlJustPressed)(0, exit) then
-                                    if _G.rcCameraControl ~= nil then
-                                        g(nativeNames.RenderScriptCams)(false, true, 1000, true, true)
-                                        g(nativeNames.DestroyCam)(_G.rcCameraControl, false)
-                                        _G.rcCameraControl = nil
-                                    end
-                                    _G.rcCarControlActive = false
-                                    _G.rcCarControl = nil
-                                    if _G.wipedFreecam and _G.wipedFreecam.camera then
-                                        g(nativeNames.SetCamActive)(_G.wipedFreecam.camera, true)
-                                        g(nativeNames.RenderScriptCams)(true, true, 1000, true, true)
-                                    end
-                                end
-                            end
+                    if numFeatures > ui.maxVisible then
+                        startIdx = math.max(1, currentFeatureIndex - math.floor(ui.maxVisible / 2))
+                        endIdx = math.min(numFeatures, startIdx + ui.maxVisible - 1)
+                        if endIdx == numFeatures then
+                            startIdx = numFeatures - ui.maxVisible + 1
                         end
                     end
-                end)
-            end
 
-            function _G.wipedFreecam.ExitCamera()
-                if not _G.wipedFreecam.isToggled then return end
-                _G.wipedFreecam.isToggled = false
-                if _G.wipedFreecam.camera then
-                    g(nativeNames.SetCamActive)(_G.wipedFreecam.camera, false)
-                    g(nativeNames.RenderScriptCams)(false, true, 500, false, false)
-                    g(nativeNames.DestroyCam)(_G.wipedFreecam.camera)
-                    _G.wipedFreecam.camera = nil
-                end
-                if _G.rcCarControlActive then
-                    if _G.rcCameraControl ~= nil then
-                        g(nativeNames.RenderScriptCams)(false, true, 1000, true, true)
-                        g(nativeNames.DestroyCam)(_G.rcCameraControl, false)
-                        _G.rcCameraControl = nil
-                    end
-                    _G.rcCarControlActive = false
-                    _G.rcCarControl = nil
-                end
-                g(nativeNames.SetFocusEntity)(g(nativeNames.PlayerPedId)())
-                g(nativeNames.EnableControlAction)(0, 14, true)
-                g(nativeNames.EnableControlAction)(0, 15, true)
-                g(nativeNames.EnableControlAction)(0, 16, true)
-                g(nativeNames.EnableControlAction)(0, 17, true)
-            end
-        end
+                    -- Draw a counter above the list
+                    drawText(("%d/%d"):format(currentFeatureIndex, numFeatures), ui.x, ui.y - 0.035, {scale = 0.25, color = {255,255,255,120}})
 
-        -- H key (74) listener — only enters/exits cam, never auto-activates
-        g(nativeNames.CreateThread)(function()
-            while _G.wipedFreecam and not _G.wipedFreecam.shutdown do
-                wait(0)
-                if g(nativeNames.IsDisabledControlJustPressed)(0, 74) then
-                    if _G.wipedFreecam.isToggled then
-                        _G.wipedFreecam.ExitCamera()
-                    else
-                        _G.wipedFreecam.EnterCamera()
+                    local displayCount = 0
+                    for i = startIdx, endIdx do
+                        local featureName = Features[i]
+                        local isSelected = (i == currentFeatureIndex)
+                        local lineY = ui.y + (displayCount * ui.lineHeight)
+                        if isSelected then
+                            drawText(("[ %s ]"):format(featureName), ui.x, lineY, {scale = 0.32, color = ui.colors.selected, shadow = true})
+                        else
+                            drawText(featureName, ui.x, lineY, {scale = 0.28, color = ui.colors.text})
+                        end
+                        displayCount = displayCount + 1
                     end
                 end
             end
-        end)
-    ]], leftControl, rightControl, freecamSpeedValue)
 
-    MachoInjectResource(GetFreecamResource(), code)
-end
-
-local function DisableFreecam()
-    MachoInjectResource(GetFreecamResource(), [[
-        if _G.wipedFreecam then
-            _G.wipedFreecam.shutdown = true
-            if _G.wipedFreecam.ExitCamera then
-                _G.wipedFreecam.ExitCamera()
-            else
-                if _G.wipedFreecam.camera then
-                    SetCamActive(_G.wipedFreecam.camera, false)
-                    RenderScriptCams(false, true, 500, false, false)
-                    DestroyCam(_G.wipedFreecam.camera)
-                    _G.wipedFreecam.camera = nil
-                end
-                if _G.rcCarControlActive then
-                    if _G.rcCameraControl ~= nil then
-                        RenderScriptCams(false, true, 1000, true, true)
-                        DestroyCam(_G.rcCameraControl, false)
-                        _G.rcCameraControl = nil
+            -- Main Input and Logic Thread
+            local function logicThread()
+                while isFreecamActive do
+                    Wait(0)
+                    if IsDisabledControlJustPressed(0, 241) then currentFeatureIndex = (currentFeatureIndex - 2 + #Features) % #Features + 1 elseif IsDisabledControlJustPressed(0, 242) then currentFeatureIndex = (currentFeatureIndex % #Features) + 1 end
+                    
+                    if IsDisabledControlJustPressed(0, 24) then -- Action Key Pressed
+                        local currentFeature = Features[currentFeatureIndex]
+                        if currentFeature == "Teleport" and targetCoords then
+                            local ped = PlayerPedId()
+                            local _, z = GetGroundZFor_3dCoord(targetCoords.x, targetCoords.y, targetCoords.z + 1.0, false)
+                            SetEntityCoords(ped, targetCoords.x, targetCoords.y, z and z + 1.0 or targetCoords.z, false, false, false, true)
+                        -- ##### NEW FEATURE: SAFE PED SPAWNER LOGIC #####
+                        elseif currentFeature == "Spawn Ped" and targetCoords then
+                            local model = pedsToSpawn[currentPedIndex]
+                            CreateThread(function()
+                                local modelHash = GetHashKey(model)
+                                RequestModel(modelHash)
+                                local timeout = 2000 -- 2 second timeout for model loading
+                                while not HasModelLoaded(modelHash) and timeout > 0 do
+                                    Wait(100)
+                                    timeout = timeout - 100
+                                end
+                                if HasModelLoaded(modelHash) then
+                                    local _, z = GetGroundZFor_3dCoord(targetCoords.x, targetCoords.y, targetCoords.z, false)
+                                    local spawnPos = vector3(targetCoords.x, targetCoords.y, z and z + 1.0 or targetCoords.z)
+                                    local newPed = CreatePed(4, modelHash, spawnPos.x, spawnPos.y, spawnPos.z, 0.0, true, true)
+                                    SetModelAsNoLongerNeeded(modelHash)
+                                    TaskStandStill(newPed, -1) -- Make them stand still
+                                    currentPedIndex = (currentPedIndex % #pedsToSpawn) + 1 -- Cycle to the next ped for next time
+                                end
+                            end)
+                        elseif currentFeature == "Delete Entity" and targetEntity and DoesEntityExist(targetEntity) then
+                            SetEntityAsMissionEntity(targetEntity, true, true)
+                            DeleteEntity(targetEntity)
+                        elseif currentFeature == "Fling Entity" and targetEntity and (IsEntityAPed(targetEntity) or IsEntityAVehicle(targetEntity)) then
+                            ApplyForceToEntity(targetEntity, 1, math.random(-50.0, 50.0), math.random(-50.0, 50.0), 50.0, 0.0, 0.0, 0.0, 0, true, true, true, false, true)
+                        elseif currentFeature == "Flip Vehicle" and targetEntity and IsEntityAVehicle(targetEntity) then
+                            SetVehicleOnGroundProperly(targetEntity)
+                        elseif currentFeature == "Launch Vehicle" and targetEntity and IsEntityAVehicle(targetEntity) then
+                            ApplyForceToEntity(targetEntity, 1, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0, true, true, true, false, true)
+                        elseif currentFeature == "Teleport Vehicle" and targetEntity and IsEntityAVehicle(targetEntity) then
+                            local currentCoords = GetEntityCoords(targetEntity)
+                            local newCoords = currentCoords + GetEntityForwardVector(targetEntity) * 5.0 + vector3(0.0, 0.0, 50.0)
+                            SetEntityCoords(targetEntity, newCoords.x, newCoords.y, newCoords.z, false, false, false, true)
+                        elseif currentFeature == "Mess With Vehicle" and targetEntity and IsEntityAVehicle(targetEntity) then
+                            local actions = {
+                                function(veh) SetVehicleTyreBurst(veh, math.random(0, 5), false, 1000.0) end,
+                                function(veh) SetVehicleDoorOpen(veh, math.random(0, 5), false, false) end,
+                                function(veh) SetVehicleEngineOn(veh, not IsVehicleEngineOn(veh), false, true) end,
+                                function(veh) SetVehicleLights(veh, math.random(0, 2)) end,
+                                function(veh) StartVehicleHorn(veh, 1000, "HELDDOWN", false) end
+                            }
+                            local randomAction = actions[math.random(#actions)]
+                            randomAction(targetEntity)
+                        end
                     end
-                    _G.rcCarControlActive = false
-                    _G.rcCarControl = nil
                 end
-                SetFocusEntity(PlayerPedId())
-                EnableControlAction(0, 14, true)
-                EnableControlAction(0, 15, true)
-                EnableControlAction(0, 16, true)
-                EnableControlAction(0, 17, true)
             end
+
+            -- Main Camera Movement Thread (Unchanged)
+            local function cameraThread()
+                local baseSpeed, boostSpeed, slowSpeed = 1.0, 9.0, 0.1; local mouseSensitivity = 7.5; local function clamp(val, min, max) return math.max(min, math.min(max, val)) end; local function rotToDir(rot) local rX, rZ = math.rad(rot.x), math.rad(rot.z); return vector3(-math.sin(rZ)*math.cos(rX), math.cos(rZ)*math.cos(rX), math.sin(rX)) end;
+                while isFreecamActive do
+                    Wait(0)
+                    local camPos, camRotRaw = GetCamCoord(freecamHandle), GetCamRot(freecamHandle, 2); local camRot = { x = camRotRaw.x, y = camRotRaw.y, z = camRotRaw.z }; local direction = rotToDir(camRot); local right = vector3(direction.y, -direction.x, 0)
+                    local speed = baseSpeed; if IsDisabledControlPressed(0, 21) then speed = boostSpeed end; if IsDisabledControlPressed(0, 19) then speed = slowSpeed end
+                    if IsDisabledControlPressed(0, 32) then camPos = camPos + direction * speed end; if IsDisabledControlPressed(0, 33) then camPos = camPos - direction * speed end; if IsDisabledControlPressed(0, 34) then camPos = camPos - right * speed end; if IsDisabledControlPressed(0, 35) then camPos = camPos + right * speed end; if IsDisabledControlPressed(0, 22) then camPos = camPos + vector3(0, 0, 1.0) * speed end; if IsDisabledControlPressed(0, 36) then camPos = camPos - vector3(0, 0, 1.0) * speed end
+                    local mX, mY = GetControlNormal(0,1)*mouseSensitivity, GetControlNormal(0,2)*mouseSensitivity; camRot.x = clamp(camRot.x-mY, -89.0, 89.0); camRot.z = camRot.z-mX
+                    SetCamCoord(freecamHandle, camPos.x, camPos.y, camPos.z); SetCamRot(freecamHandle, camRot.x, camRot.y, camRot.z, 2); SetFocusPosAndVel(camPos.x, camPos.y, camPos.z, 0.0, 0.0, 0.0)
+                    local ray = StartShapeTestRay(camPos.x, camPos.y, camPos.z, camPos.x+direction.x*1000.0, camPos.y+direction.y*1000.0, camPos.z+direction.z*1000.0, -1, PlayerPedId(), 7); local _, hit, coords, _, entity = GetShapeTestResult(ray); if hit then targetCoords, targetEntity = coords, entity else targetCoords, targetEntity = nil, nil end
+                end
+            end
+            
+            startFreecam = function()
+                if isFreecamActive then return end
+                isFreecamActive = true
+                local startPos, startRot, startFov = GetGameplayCamCoord(), GetGameplayCamRot(2), GetGameplayCamFov()
+                freecamHandle = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", startPos.x, startPos.y, startPos.z, startRot.x, startRot.y, startRot.z, startFov, true, 2)
+                
+                if not DoesCamExist(freecamHandle) then isFreecamActive = false; return end
+
+                RenderScriptCams(true, false, 0, true, true)
+                SetCamActive(freecamHandle, true)
+                CreateThread(drawThread)
+                CreateThread(logicThread)
+                CreateThread(cameraThread)
+            end
+
+            stopFreecam = function()
+                if not isFreecamActive then return end
+                isFreecamActive = false
+                if freecamHandle and DoesCamExist(freecamHandle) then SetCamActive(freecamHandle, false); RenderScriptCams(false, false, 0, true, true); DestroyCam(freecamHandle, false) end
+                Wait(10); SetFocusEntity(PlayerPedId()); ClearFocus()
+                freecamHandle = nil
+            end
+            
             CreateThread(function()
-                Wait(100)
-                _G.wipedFreecam = nil
+                while g_FreecamFeatureEnabled and not Unloaded do Wait(0)
+                    if IsDisabledControlJustPressed(0, 74) then -- H key
+                        if isFreecamActive then stopFreecam()
+                        else startFreecam() end
+                    end
+                end
             end)
         end
+        
+        initializeFreecam()
     ]])
-end
-
-MachoMenuCheckbox(Self[1], "Free Camera", function()
-    EnableFreecam()
 end, function()
-    DisableFreecam()
+    MachoInjectResource((CheckResource("core") and "core") or (CheckResource("es_extended") and "es_extended") or (CheckResource("qb-core") and "qb-core") or (CheckResource("monitor") and "monitor") or "any", [[
+        g_FreecamFeatureEnabled = false
+        if isFreecamActive and stopFreecam then stopFreecam() end
+    ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Super Jump", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Super Jump", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if xCvBnMqWeRtYuIo == nil then xCvBnMqWeRtYuIo = false end
         xCvBnMqWeRtYuIo = true
@@ -1341,7 +880,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Levitation", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Levitation", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         -- make helpers global so other chunks can use them
         function ScaleVector(vect, mult)
@@ -1462,7 +1001,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Super Strength", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Super Strength", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if fgawjFmaDjdALaO == nil then fgawjFmaDjdALaO = false end
         fgawjFmaDjdALaO = true
@@ -1598,7 +1137,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Super Punch", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Super Punch", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if qWeRtYuIoPlMnBv == nil then qWeRtYuIoPlMnBv = false end
         qWeRtYuIoPlMnBv = true
@@ -1640,7 +1179,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Throw From Vehicle", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Throw From Vehicle", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if zXpQwErTyUiPlMn == nil then zXpQwErTyUiPlMn = false end
         zXpQwErTyUiPlMn = true
@@ -1664,7 +1203,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Force Third Person", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Force Third Person", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if kJfGhTrEeWqAsDz == nil then kJfGhTrEeWqAsDz = false end
         kJfGhTrEeWqAsDz = true
@@ -1691,7 +1230,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Force Driveby", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Force Driveby", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if zXcVbNmQwErTyUi == nil then zXcVbNmQwErTyUi = false end
         zXcVbNmQwErTyUi = true
@@ -1717,7 +1256,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Anti-Headshot", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Anti-Headshot", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if yHnvrVNkoOvGMWiS == nil then yHnvrVNkoOvGMWiS = false end
         yHnvrVNkoOvGMWiS = true
@@ -1742,7 +1281,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Anti-Freeze", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Anti-Freeze", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if nHgFdSaZxCvBnMq == nil then nHgFdSaZxCvBnMq = false end
         nHgFdSaZxCvBnMq = true
@@ -1772,7 +1311,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Self[1], "Anti-Blackscreen", function()
+MachoMenuCheckbox(PlayerTabSections[1], "Anti-Blackscreen", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if aDjsfmansdjwAEl == nil then aDjsfmansdjwAEl = false end
         aDjsfmansdjwAEl = true
@@ -1795,39 +1334,9 @@ end, function()
     ]])
 end)
 
+local ModelNameHandle = MachoMenuInputbox(PlayerTabSections[2], "Model Name:", "...")
 
--- [ Laser Eyes ]
-MachoMenuCheckbox(Self[3], "Laser Eyes (Left Alt)", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        if _G.blossom_LaserEyes == nil then _G.blossom_LaserEyes = false end
-        _G.blossom_LaserEyes = true
-        CreateThread(function()
-            while _G.blossom_LaserEyes and not Unloaded do
-                Wait(0)
-                if IsControlPressed(0, 19) then -- Left Alt
-                    local ped = PlayerPedId()
-                    local camCoord = GetGameplayCamCoord()
-                    local camRot = GetGameplayCamRot(2)
-                    local radZ = math.rad(camRot.z)
-                    local radX = math.rad(camRot.x)
-                    local dir = vector3(-math.sin(radZ)*math.cos(radX), math.cos(radZ)*math.cos(radX), math.sin(radX))
-                    local dest = camCoord + dir * 300.0
-                    ShootSingleBulletBetweenCoords(camCoord.x, camCoord.y, camCoord.z, dest.x, dest.y, dest.z, 100.0, true, GetHashKey("weapon_lazer"), ped, true, false, 1000.0)
-                end
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        _G.blossom_LaserEyes = false
-    ]])
-end)
-
-
--- [ Model Changer ]
-local ModelNameHandle = MachoMenuInputbox(Self[2], "Model Name:", "...")
-
-MachoMenuButton(Self[2], "Change Model", function()
+MachoMenuButton(PlayerTabSections[2], "Change Model", function()
     local ModelName = MachoMenuGetInputbox(ModelNameHandle)
 
     if type(ModelName) == "string" and ModelName ~= "" then
@@ -1854,7 +1363,19 @@ MachoMenuButton(Self[2], "Change Model", function()
     end
 end)
 
-MachoMenuButton(Self[2], ".gg/blossoma Drip", function()
+MachoMenuCheckbox(PlayerTabSections[3], "Toggle Player IDs", function()
+    MachoInjectResource2(3, 'monitor', [[
+        menuIsAccessible = true
+        toggleShowPlayerIDs(true, true)
+    ]])
+end, function()
+    MachoInjectResource2(3, 'monitor', [[
+        menuIsAccessible = true
+        toggleShowPlayerIDs(false, false)
+    ]])
+end)
+
+MachoMenuButton(PlayerTabSections[2], ".gg/blossoma Drip", function()
     function WhiteblossomDrip()
         local ped = PlayerPedId()
 
@@ -1875,7 +1396,7 @@ MachoMenuButton(Self[2], ".gg/blossoma Drip", function()
     WhiteblossomDrip()
 end)
 
-MachoMenuButton(Self[2], ".gg/blossoma Mafia Drip", function()
+MachoMenuButton(PlayerTabSections[2], ".gg/blossoma Mafia Drip", function()
     function CAPTCHASMafia()
         local ped = PlayerPedId()
 
@@ -1898,74 +1419,15 @@ MachoMenuButton(Self[2], ".gg/blossoma Mafia Drip", function()
     CAPTCHASMafia()
 end)
 
-
--- [ Animal Peds ]
--- Animal Peds in Model Changer
-local blossomAnimalModels = {
-    "a_c_boar","a_c_cat_01","a_c_hen","a_c_chimp","a_c_cow","a_c_coyote","a_c_crow",
-    "a_c_deer","a_c_dolphin","a_c_fish","a_c_humpback","a_c_husky","a_c_killerwhale",
-    "a_c_mtlion","a_c_pig","a_c_pigeon","a_c_poodle","a_c_pug","a_c_rabbit_01",
-    "a_c_rat","a_c_retriever","a_c_rhesus","a_c_rottweiler","a_c_seagull",
-    "a_c_shepherd","a_c_stingray","a_c_sharktiger","a_c_sharkhammer"
-}
-local blossomAnimalNames = {
-    "Boar","Cat","Chicken","Chimp","Cow","Coyote","Crow","Deer","Dolphin","Fish",
-    "Humpback","Husky","Killer Whale","Mountain Lion","Pig","Pigeon","Poodle",
-    "Pug","Rabbit","Rat","Retriever","Rhesus Monkey","Rottweiler","Seagull",
-    "Shepherd","Stingray","Tiger Shark","Hammerhead Shark"
-}
-
-MachoMenuDropDown(Self[2], "Animal Ped", function(index)
-    if blossomAnimalModels[index] then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-            local model = "%s"
-            local hash = GetHashKey(model)
-            RequestModel(hash)
-            while not HasModelLoaded(hash) do Wait(100) end
-            SetPlayerModel(PlayerId(), hash)
-            SetModelAsNoLongerNeeded(hash)
-        ]], blossomAnimalModels[index]))
-    end
-end, table.unpack(blossomAnimalNames))
-
--- Freemode Models
-MachoMenuDropDown(Self[2], "Freemode", function(index)
-    local models = {"mp_m_freemode_01", "mp_f_freemode_01"}
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local hash = GetHashKey("%s")
-        RequestModel(hash)
-        while not HasModelLoaded(hash) do Wait(100) end
-        SetPlayerModel(PlayerId(), hash)
-        SetModelAsNoLongerNeeded(hash)
-    ]], models[index]))
-end, "Freemode Male", "Freemode Female")
-
-
-
-
-
--- [ Functions ]
-MachoMenuCheckbox(Self[3], "Toggle Player IDs", function()
-    MachoInjectResource2(3, 'monitor', [[
-        menuIsAccessible = true
-        toggleShowPlayerIDs(true, true)
-    ]])
-end, function()
-    MachoInjectResource2(3, 'monitor', [[
-        menuIsAccessible = true
-        toggleShowPlayerIDs(false, false)
-    ]])
-end)
-
-MachoMenuButton(Self[3], "Heal", function()
+MachoMenuButton(PlayerTabSections[3], "Heal", function()
     SetEntityHealth(PlayerPedId(), 200)
 end)
 
-MachoMenuButton(Self[3], "Armor", function()
+MachoMenuButton(PlayerTabSections[3], "Armor", function()
     SetPedArmour(PlayerPedId(), 100)
 end)
 
-MachoMenuButton(Self[3], "Fill Hunger", function()
+MachoMenuButton(PlayerTabSections[3], "Fill Hunger", function()
     MachoInjectResource2(3, CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function DawrjatjsfAW()
             TriggerEvent('esx_status:set', 'hunger', 1000000)
@@ -1975,7 +1437,7 @@ MachoMenuButton(Self[3], "Fill Hunger", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Fill Thirst", function()
+MachoMenuButton(PlayerTabSections[3], "Fill Thirst", function()
     MachoInjectResource2(3, CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function sWj238fsMAw()
             TriggerEvent('esx_status:set', 'thirst', 1000000)
@@ -1985,7 +1447,7 @@ MachoMenuButton(Self[3], "Fill Thirst", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Revive", function()
+MachoMenuButton(PlayerTabSections[3], "Revive", function()
     MachoInjectResource2(3, CheckResource("ox_inventory") and "ox_inventory" or CheckResource("ox_lib") and "ox_lib" or CheckResource("es_extended") and "es_extended" or CheckResource("qb-core") and "qb-core" or CheckResource("wasabi_ambulance") and "wasabi_ambulance" or CheckResource("ak47_ambulancejob") and "ak47_ambulancejob" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function AcjU5NQzKw()
             if GetResourceState('prp-injuries') == 'started' then
@@ -2024,7 +1486,7 @@ MachoMenuButton(Self[3], "Revive", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Suicide", function()
+MachoMenuButton(PlayerTabSections[3], "Suicide", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function RGybF0JqEt()
             local aSdFgHjKlQwErTy = SetEntityHealth
@@ -2035,7 +1497,7 @@ MachoMenuButton(Self[3], "Suicide", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Force Ragdoll", function()
+MachoMenuButton(PlayerTabSections[3], "Force Ragdoll", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function awfAEDSADWEf()
             local cWAmdjakwDksFD = SetPedToRagdoll
@@ -2046,7 +1508,7 @@ MachoMenuButton(Self[3], "Force Ragdoll", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Clear Task", function()
+MachoMenuButton(PlayerTabSections[3], "Clear Task", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function iPfT7kN3dU()
             local zXcVbNmAsDfGhJk = ClearPedTasksImmediately
@@ -2057,7 +1519,7 @@ MachoMenuButton(Self[3], "Clear Task", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Clear Vision", function()
+MachoMenuButton(PlayerTabSections[3], "Clear Vision", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function MsVqZ29ptY()
             local qWeRtYuIoPlMnBv = ClearTimecycleModifier
@@ -2071,62 +1533,7 @@ MachoMenuButton(Self[3], "Clear Vision", function()
     ]])
 end)
 
-MachoMenuButton(Self[3], "Force GPS", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        SetBlipRoute(GetFirstBlipInfoId(8), true)
-        StartGpsCustomRoute(0.0, 0.0, 0)
-        DisplayPreviousRoutedGpsRoute(true)
-    ]])
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "GPS forced.")
-end)
-
--- Custom Outfit Components
-local outfitNumbersStr = {}
-for i = 1, 200 do table.insert(outfitNumbersStr, tostring(i)) end
-
-MachoMenuDropDown(Self[3], "Hat", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedPropIndex(PlayerPedId(), 0, %d, 0, true)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuDropDown(Self[3], "Mask", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedComponentVariation(PlayerPedId(), 1, %d, 0, 0)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuDropDown(Self[3], "Glasses", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedPropIndex(PlayerPedId(), 1, %d, 0, true)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuDropDown(Self[3], "Torso", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedComponentVariation(PlayerPedId(), 3, %d, 0, 0)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuDropDown(Self[3], "T-Shirt", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedComponentVariation(PlayerPedId(), 8, %d, 0, 0)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuDropDown(Self[3], "Pants", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedComponentVariation(PlayerPedId(), 4, %d, 0, 0)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuDropDown(Self[3], "Shoes", function(index)
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        SetPedComponentVariation(PlayerPedId(), 6, %d, 0, 0)
-    ]], index - 1))
-end, table.unpack(outfitNumbersStr))
-
-MachoMenuButton(Self[3], "Randomize Outfit", function()
+MachoMenuButton(PlayerTabSections[3], "Randomize Outfit", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function UxrKYLp378()
             local UwEsDxCfVbGtHy = PlayerPedId
@@ -2186,32 +1593,40 @@ MachoMenuButton(Self[3], "Randomize Outfit", function()
 end)
 
 
-
-
-
--- ═══════════════════════════════════════════════════════
---  SERVER TAB
--- ═══════════════════════════════════════════════════════
-
--- [ Player ID Input — shared by all player-targeted features ]
-local PlayerIDInputHandle = MachoMenuInputbox(Server[1], "Player ID:", "0")
+-- Server Tab
+-- Player ID Input with numeric filtering and sync
+local PlayerIDInputHandle = MachoMenuInputbox(ServerTabSections[1], "Player ID:", "0")
 local LastValidPlayerID = nil
 
+-- Helper function to filter numeric-only input and sync
 local function GetValidPlayerID()
     local rawInput = MachoMenuGetInputbox(PlayerIDInputHandle)
+    
     if rawInput and rawInput ~= "" then
+        -- Filter to numbers only
         local numericOnly = rawInput:gsub("[^0-9]", "")
+        
+        -- If filtering removed characters, update the input box to show only numbers
+        if numericOnly ~= rawInput and numericOnly ~= "" then
+            -- Note: MachoMenu doesn't support setting input box values directly
+            -- So we'll just use the filtered value
+            rawInput = numericOnly
+        end
+        
         local playerID = tonumber(numericOnly)
         if playerID and playerID >= 0 then
             LastValidPlayerID = playerID
             return playerID
         end
     end
+    
     return nil
 end
 
+-- Helper function to convert Server ID to Player Index
 local function GetPlayerIndexFromServerId(serverId)
     if not serverId then return nil end
+    
     for i = 0, 255 do
         if NetworkIsPlayerActive(i) then
             if GetPlayerServerId(i) == serverId then
@@ -2219,399 +1634,13 @@ local function GetPlayerIndexFromServerId(serverId)
             end
         end
     end
+    
     return nil
 end
 
--- ═══════════════════════════════════════════════════════
---  SERVER TAB — PLAYER ACTIONS (uses Player ID input above)
--- ═══════════════════════════════════════════════════════
-
--- [ Player Actions ]
-MachoMenuButton(Server[1], "Teleport To Player", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if not DoesEntityExist(targetPed) then return end
-        local coords = GetEntityCoords(targetPed)
-        local myPed = PlayerPedId()
-        local myVeh = GetVehiclePedIsIn(myPed, false)
-        if myVeh and myVeh ~= 0 then
-            SetEntityCoordsNoOffset(myVeh, coords.x, coords.y, coords.z, false, false, false)
-        else
-            SetEntityCoordsNoOffset(myPed, coords.x, coords.y, coords.z + 1.0, false, false, false)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Teleported to player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Kill Player (Direct)", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) then
-            local myPed = PlayerPedId()
-            local targetCoords = GetEntityCoords(targetPed)
-            ShootSingleBulletBetweenCoords(
-                targetCoords.x, targetCoords.y, targetCoords.z + 5.0,
-                targetCoords.x, targetCoords.y, targetCoords.z,
-                5000.0, true, GetHashKey("weapon_assaultrifle"), myPed, true, false, 9999.0
-            )
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Kill sent to player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Force Hands Up", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) then
-            local dict = "missminuteman_1ig_2"
-            RequestAnimDict(dict)
-            while not HasAnimDictLoaded(dict) do Wait(0) end
-            TaskPlayAnim(targetPed, dict, "handsup_enter", 8.0, 8.0, -1, 49, 0, false, false, false)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Forced hands up on player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Steal Outfit", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if not DoesEntityExist(targetPed) then return end
-        local playerPed = PlayerPedId()
-        for compId = 0, 11 do
-            local drawable = GetPedDrawableVariation(targetPed, compId)
-            local texture = GetPedTextureVariation(targetPed, compId)
-            local palette = GetPedPaletteVariation(targetPed, compId)
-            SetPedComponentVariation(playerPed, compId, drawable, texture, palette)
-        end
-        for propId = 0, 7 do
-            local propIndex = GetPedPropIndex(targetPed, propId)
-            if propIndex ~= -1 then
-                local texture = GetPedPropTextureIndex(targetPed, propId)
-                SetPedPropIndex(playerPed, propId, propIndex, texture, true)
-            else
-                ClearPedProp(playerPed, propId)
-            end
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Stole outfit from player " .. targetId)
-end)
-
--- [ Player Vehicle Actions ]
-local attachCarVehicles = {"pounder2","pounder","mule","phantom","hauler","mixer","bus","coach","firetruk","trashmaster","benson","stockade","brickade","rhino","insurgent","luxor2"}
-
-MachoMenuDropDown(Vehicle[1], "Attach Car To Player", function(index)
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    local vehicleModel = attachCarVehicles[index]
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if not DoesEntityExist(targetPed) then return end
-        local coords = GetEntityCoords(targetPed)
-        local model = "%s"
-        local hash = GetHashKey(model)
-        RequestModel(hash)
-        while not HasModelLoaded(hash) do Wait(100) end
-        local veh = CreateVehicle(hash, coords.x, coords.y, coords.z + 0.5, GetEntityHeading(targetPed), true, true)
-        SetVehicleOnGroundProperly(veh)
-        AttachEntityToEntity(veh, targetPed, 0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
-        SetModelAsNoLongerNeeded(hash)
-    ]], targetId, vehicleModel))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Attached " .. vehicleModel .. " to player " .. targetId)
-end, table.unpack(attachCarVehicles))
-
-MachoMenuButton(Vehicle[1], "Explode Player Vehicle", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) and IsPedInAnyVehicle(targetPed, false) then
-            local vehicle = GetVehiclePedIsIn(targetPed, false)
-            if DoesEntityExist(vehicle) then
-                local coords = GetEntityCoords(vehicle)
-                AddExplosion(coords.x, coords.y, coords.z, 1, 1.0, true, false, 0.5)
-            end
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Exploded vehicle of player " .. targetId)
-end)
-
-MachoMenuButton(Vehicle[1], "Steal Player Vehicle", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) and IsPedInAnyVehicle(targetPed, false) then
-            local vehicle = GetVehiclePedIsIn(targetPed, false)
-            if DoesEntityExist(vehicle) then
-                TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, 0)
-            end
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Stealing vehicle of player " .. targetId)
-end)
-
-MachoMenuButton(Vehicle[1], "Kick Player From Vehicle", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) and IsPedInAnyVehicle(targetPed, false) then
-            TaskLeaveVehicle(targetPed, GetVehiclePedIsIn(targetPed, false), 64)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Kicked player " .. targetId .. " from vehicle.")
-end)
-
--- [ Player Trolling ]
-MachoMenuButton(Server[1], "Send Player To Sky", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) then
-            local coords = GetEntityCoords(targetPed)
-            SetEntityCoordsNoOffset(targetPed, coords.x, coords.y, coords.z + 500.0, false, false, false)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Sent player " .. targetId .. " to sky.")
-end)
-
-MachoMenuButton(Server[1], "Explode Player (Single)", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) then
-            local coords = GetEntityCoords(targetPed)
-            AddOwnedExplosion(PlayerPedId(), coords.x, coords.y, coords.z, 6, 2.0, true, false, 0.0)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Exploded player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Launch Player (Single)", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) and not IsPedInAnyVehicle(targetPed, false) then
-            ApplyForceToEntity(targetPed, 1, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0, true, true, true, false, true)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Launched player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Cage Player (Single)", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local pos = GetEntityCoords(GetPlayerPed(targetPlayer))
-        RequestModel('prop_gascage01')
-        while not HasModelLoaded('prop_gascage01') do Wait(0) end
-        if HasModelLoaded('prop_gascage01') then
-            local cage = CreateObject(GetHashKey('prop_gascage01'), pos.x, pos.y, pos.z, true, true, true)
-            FreezeEntityPosition(cage, true)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Caged player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Glitch Player (Single)", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) then
-            for i = 1, 5 do
-                local coords = GetEntityCoords(targetPed)
-                SetEntityCoordsNoOffset(targetPed, coords.x + math.random(-5, 5), coords.y + math.random(-5, 5), coords.z + 2.0, false, false, false)
-                Wait(50)
-            end
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Glitched player " .. targetId)
-end)
-
-MachoMenuButton(Server[1], "Fling Player", function()
-    local targetId = GetValidPlayerID()
-    if not targetId then
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Enter a valid Player ID.")
-        return
-    end
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-        local targetPlayer = GetPlayerFromServerId(%d)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if DoesEntityExist(targetPed) then
-            ApplyForceToEntity(targetPed, 1, math.random(-50, 50), math.random(-50, 50), 80.0, 0.0, 0.0, 0.0, 0, true, true, true, false, true)
-        end
-    ]], targetId))
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Flung player " .. targetId)
-end)
-
--- [ Player Wardrobe / Model ]
-local blossomPedModels = {
-    "player_zero","player_one","player_two","ig_lamardavis","ig_jimmydisanto",
-    "ig_amandatownley","ig_tracydisanto","ig_ronsch","ig_wade","ig_davenorton",
-    "ig_stevehains","ig_devin","ig_floyd","ig_chef","ig_lestercrest",
-    "a_c_chop","ig_brad","s_m_y_cop_01","s_f_y_cop_01","s_m_y_swat_01",
-    "s_m_y_sheriff_01","s_f_y_sheriff_01","s_m_y_hwaycop_01","s_m_m_fibsec_01",
-    "s_m_m_paramedic_01","s_m_y_fireman_01","s_m_m_doctor_01",
-    "s_m_y_construct_01","s_m_m_pilot_02","s_f_y_airhostess_01",
-    "s_m_y_business_01","s_f_y_business_01",
-    "g_m_y_mexgoon_02","g_m_y_ballaorig_01","g_m_y_ballasout_01",
-    "g_f_y_ballas_01","g_m_y_ballaeast_01","g_m_y_famca_01","g_m_y_famdnf_01",
-    "g_m_y_mexgoon_01","g_m_y_mexgoon_03","g_m_y_lost_01","g_m_y_lost_02",
-    "g_f_y_lost_01","s_m_y_marine_01","s_m_y_marine_02","s_m_y_marine_03",
-    "s_m_y_prismuscl_01","s_m_m_prisguard_01","s_m_m_ciasec_01","s_m_m_security_01",
-    "s_m_m_janitor","a_m_m_tramp_01","a_f_m_tramp_01","s_f_y_hooker_01",
-    "s_f_y_hooker_02","a_m_y_beach_01","a_f_y_beach_01","a_m_y_tourist_01",
-    "a_f_y_tourist_01","a_m_y_skater_01","a_m_y_hipster_01","a_f_y_hipster_01",
-    "s_m_m_bouncer_01","mp_m_shopkeep_01","s_m_y_chef_01","s_m_y_barman_01",
-    "s_m_y_waiter_01","s_m_y_xmech_02","s_m_m_trucker_01","s_m_m_gardener_01",
-    "a_m_m_farmer_01","s_m_y_dockwork_01","s_m_y_garbage","s_m_m_postal_01",
-    "s_m_m_pilot_01","s_m_y_hwaycop_01","s_m_m_ciasec_01","s_f_y_scrubs_01",
-    "a_m_m_hillbilly_02","a_m_m_hiker_01","a_f_m_hiker_01",
-    "a_m_m_golfer_01","a_f_m_golfer_01","a_m_m_tennis_01","a_f_m_tennis_01"
-}
-local blossomPedNames = {
-    "Michael","Franklin","Trevor","Lamar","Jimmy","Amanda","Tracey","Ron","Wade","Dave Norton",
-    "Steve Haines","Devin Weston","Floyd","Chef","Lester","Chop","Brad",
-    "Police Male","Police Female","SWAT","Sheriff Male","Sheriff Female",
-    "Highway Cop","FIB Male","Paramedic","Firefighter","Doctor",
-    "Construction Worker","Pilot Male","Air Hostess","Business Male","Business Female",
-    "Street Dealer","Gang 1","Gang 2","Gang Female","Ballas 1","Families 1","Families 2",
-    "Vagos 1","Vagos 2","Lost MC 1","Lost MC 2","Lost MC Female",
-    "Army 1","Army 2","Army 3","Prisoner","Prison Guard","CIA","Security","Janitor",
-    "Hobo Male","Hobo Female","Prostitute 1","Prostitute 2",
-    "Beach Male","Beach Female","Tourist Male","Tourist Female","Skater",
-    "Hipster Male","Hipster Female","Bouncer","Shopkeeper","Chef","Bartender","Waiter",
-    "Mechanic","Trucker","Gardener","Farmer","Dock Worker","Trash Worker",
-    "Postal Worker","Pilot","Air Hostess 2","Cop Traffic","Cop 2","Agent 2","Reporter 2",
-    "Hunter","Hiker Male","Hiker Female","Golfer Male","Golfer Female","Tennis Male","Tennis Female"
-}
-
-MachoMenuDropDown(Server[1], "Ped Models", function(index)
-    if blossomPedModels[index] then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-            local hash = GetHashKey("%s")
-            RequestModel(hash)
-            while not HasModelLoaded(hash) do Wait(100) end
-            SetPlayerModel(PlayerId(), hash)
-            SetModelAsNoLongerNeeded(hash)
-        ]], blossomPedModels[index]))
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Changed to " .. blossomPedNames[index])
-    end
-end, table.unpack(blossomPedNames))
-
-MachoMenuButton(Server[1], "Copy Appearance", function()
-    local targetServerId = GetValidPlayerID()
-    local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
-    if targetPlayer and targetPlayer >= 0 then
-        MachoInjectResource(CheckResource("oxmysql") and "oxmysql" or "any", ([[
-            local function AsDfGhJkLqWe()
-                local ZxCvBnMqWeRt = %d
-                local UiOpAsDfGhJk = GetPlayerPed
-                local QwErTyUiOpAs = PlayerPedId
-                local DfGhJkLqWeRt = DoesEntityExist
-                local ErTyUiOpAsDf = ClonePedToTarget
-
-                local TyUiOpAsDfGh = UiOpAsDfGhJk(ZxCvBnMqWeRt)
-                if DfGhJkLqWeRt(TyUiOpAsDfGh) then
-                    local YpAsDfGhJkLq = QwErTyUiOpAs()
-                    ErTyUiOpAsDf(TyUiOpAsDfGh, YpAsDfGhJkLq)
-                end
-            end
-
-            AsDfGhJkLqWe()
-        ]]):format(targetPlayer))
-    else
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Invalid Player ID or Player Not Found")
-    end
-end)
-
-
-
--- ═══════════════════════════════════════════════════════
---  SERVER TAB — PLAYER (by Server ID)
--- ═══════════════════════════════════════════════════════
-
--- [ Player Actions (continued) ]
-MachoMenuButton(Server[1], "Kill Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Kill Player", function()
+    local oPlMnBvCxZaQwEr = MachoMenuGetSelectedPlayer()
+    local targetServerId = GetValidPlayerID() or oPlMnBvCxZaQwEr
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     
     if targetPlayer and targetPlayer >= 0 then
@@ -2654,8 +1683,9 @@ MachoMenuButton(Server[1], "Kill Player", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Taze Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Taze Player", function()
+    local oPlMnBvCxZaQwEr = MachoMenuGetSelectedPlayer()
+    local targetServerId = GetValidPlayerID() or oPlMnBvCxZaQwEr
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     
     if targetPlayer and targetPlayer >= 0 then
@@ -2698,8 +1728,9 @@ MachoMenuButton(Server[1], "Taze Player", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Cage Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Cage Player", function()
+    local oPlMnBvCxZaQwEr = MachoMenuGetSelectedPlayer()
+    local targetServerId = GetValidPlayerID() or oPlMnBvCxZaQwEr
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     
     if targetPlayer and targetPlayer >= 0 then
@@ -2732,8 +1763,8 @@ MachoMenuButton(Server[1], "Cage Player", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Explode Player (DETECTABLE)", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Explode Player (DETECTABLE)", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", ([[
@@ -2763,8 +1794,8 @@ MachoMenuButton(Server[1], "Explode Player (DETECTABLE)", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Give All Nearby Objects", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Give All Nearby Objects", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", ([[
@@ -2807,8 +1838,8 @@ MachoMenuButton(Server[1], "Give All Nearby Objects", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Teleport To Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Teleport To Player", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource(CheckResource("oxmysql") and "oxmysql" or "any", ([[
@@ -2832,8 +1863,8 @@ MachoMenuButton(Server[1], "Teleport To Player", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Kick From Vehicle", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Kick From Vehicle", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource((CheckResource("ReaperV4") and "ReaperV4") or (CheckResource("oxmysql") and "oxmysql") or (CheckResource("monitor") and "monitor") or "any", ([[
@@ -2899,8 +1930,8 @@ MachoMenuButton(Server[1], "Kick From Vehicle", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Freeze Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Freeze Player", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource((CheckResource("ReaperV4") and "ReaperV4") or (CheckResource("oxmysql") and "oxmysql") or (CheckResource("monitor") and "monitor") or "any", ([[
@@ -2955,8 +1986,8 @@ MachoMenuButton(Server[1], "Freeze Player", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Glitch Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Glitch Player", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource((CheckResource("ReaperV4") and "ReaperV4") or (CheckResource("oxmysql") and "oxmysql") or (CheckResource("monitor") and "monitor") or "any", ([[
@@ -3015,8 +2046,8 @@ MachoMenuButton(Server[1], "Glitch Player", function()
     end
 end)
 
-MachoMenuButton(Server[1], "Limbo Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Limbo Player", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource((CheckResource("ReaperV4") and "ReaperV4") or (CheckResource("oxmysql") and "oxmysql") or (CheckResource("monitor") and "monitor") or "any", ([[
@@ -3075,8 +2106,32 @@ MachoMenuButton(Server[1], "Limbo Player", function()
     end
 end)
 
-MachoMenuCheckbox(Server[1], "Spectate Player", function()
-    local targetServerId = GetValidPlayerID()
+MachoMenuButton(ServerTabSections[1], "Copy Appearance", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
+    local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
+    if targetPlayer and targetPlayer >= 0 then
+        MachoInjectResource(CheckResource("oxmysql") and "oxmysql" or "any", ([[
+            local function AsDfGhJkLqWe()
+                local ZxCvBnMqWeRt = %d
+                local UiOpAsDfGhJk = GetPlayerPed
+                local QwErTyUiOpAs = PlayerPedId
+                local DfGhJkLqWeRt = DoesEntityExist
+                local ErTyUiOpAsDf = ClonePedToTarget
+
+                local TyUiOpAsDfGh = UiOpAsDfGhJk(ZxCvBnMqWeRt)
+                if DfGhJkLqWeRt(TyUiOpAsDfGh) then
+                    local YpAsDfGhJkLq = QwErTyUiOpAs()
+                    ErTyUiOpAsDf(TyUiOpAsDfGh, YpAsDfGhJkLq)
+                end
+            end
+
+            AsDfGhJkLqWe()
+        ]]):format(targetPlayer))
+    end
+end)
+
+MachoMenuCheckbox(ServerTabSections[1], "Spectate Player", function()
+    local targetServerId = GetValidPlayerID() or MachoMenuGetSelectedPlayer()
     local targetPlayer = GetPlayerIndexFromServerId(targetServerId)
     if targetPlayer and targetPlayer >= 0 then
         MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", ([[
@@ -3125,7 +2180,7 @@ end, function()
     ]])
 end)
 
--- MachoMenuButton(Server[2], "Crash Nearby [Don't Spam]", function()
+-- MachoMenuButton(ServerTabSections[2], "Crash Nearby [Don't Spam]", function()
 --     MachoInjectResource((CheckResource("ReaperV4") and "ReaperV4") or (CheckResource("FiniAC") and "FiniAC") or (CheckResource("WaveShield") and "WaveShield") or (CheckResource("monitor") and "monitor") or "any", [[
 --         local function sfehwq34rw7td()
 --             local Nwq7sd2Lkq0pHkfa = CreateThread
@@ -3224,9 +2279,7 @@ end)
 --     ]])
 -- end)
 
-
--- [ Everyone ]
-MachoMenuButton(Server[2], "Cone Everyone", function() 
+MachoMenuButton(ServerTabSections[2], "Cone Everyone", function() 
     local model = GetHashKey("prop_roadcone02a")
     RequestModel(model) 
     while not HasModelLoaded(model) do 
@@ -3260,7 +2313,7 @@ MachoMenuButton(Server[2], "Cone Everyone", function()
     end
 end)
 
-MachoMenuButton(Server[2], "Explode All Players", function()
+MachoMenuButton(ServerTabSections[2], "Explode All Players", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function fGhJkLpOiUzXcVb()
             local aSdFgHjKlQwErTy = GetActivePlayers
@@ -3293,7 +2346,7 @@ MachoMenuButton(Server[2], "Explode All Players", function()
     ]])
 end)
 
-MachoMenuButton(Server[2], "Explode All Vehicles", function()
+MachoMenuButton(ServerTabSections[2], "Explode All Vehicles", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function uYhGtFrEdWsQaZx()
             local rTyUiOpAsDfGhJk = GetGamePool
@@ -3315,7 +2368,7 @@ MachoMenuButton(Server[2], "Explode All Vehicles", function()
     ]])
 end)
 
-MachoMenuButton(Server[2], "Delete All Vehicles", function()
+MachoMenuButton(ServerTabSections[2], "Delete All Vehicles", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function zXcVbNmQwErTyUi()
             local aSdFgHjKlQwErTy = GetGamePool
@@ -3349,7 +2402,7 @@ MachoMenuButton(Server[2], "Delete All Vehicles", function()
     ]])
 end)
 
-MachoMenuButton(Server[2], "Delete All Peds", function()
+MachoMenuButton(ServerTabSections[2], "Delete All Peds", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function qWeRtYuIoPlMnBv()
             local zXcVbNmQwErTyUi = GetGamePool
@@ -3383,7 +2436,7 @@ MachoMenuButton(Server[2], "Delete All Peds", function()
     ]])
 end)
 
-MachoMenuButton(Server[2], "Delete All Objects", function()
+MachoMenuButton(ServerTabSections[2], "Delete All Objects", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function mNqAzXwSeRdTfGy()
             local rTyUiOpAsDfGhJk = GetGamePool
@@ -3412,7 +2465,7 @@ MachoMenuButton(Server[2], "Delete All Objects", function()
     ]])
 end)
 
-MachoMenuButton(Server[2], "Cage All Players", function()
+MachoMenuButton(ServerTabSections[2], "Cage All Players", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function CageAllPlayers()
             local players = GetActivePlayers()
@@ -3442,7 +2495,7 @@ MachoMenuButton(Server[2], "Cage All Players", function()
     ]])
 end)
 
-MachoMenuCheckbox(Server[2], "Kill Everyone", function()
+MachoMenuCheckbox(ServerTabSections[2], "Kill Everyone", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if aSwDeFgHiJkLoPx == nil then aSwDeFgHiJkLoPx = false end
         aSwDeFgHiJkLoPx = true
@@ -3506,7 +2559,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Server[2], "Permanent Kill Everyone", function()
+MachoMenuCheckbox(ServerTabSections[2], "Permanent Kill Everyone", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if qWeRtYuIoPlMnAb == nil then qWeRtYuIoPlMnAb = false end
         qWeRtYuIoPlMnAb = true
@@ -3571,13 +2624,298 @@ end, function()
 end)
 
 -- Teleport Tab
+local CoordsHandle = MachoMenuInputbox(TeleportTabSections[1], "Coords:", "x, y, z")
+MachoMenuButton(TeleportTabSections[1], "Teleport to Coords", function()
+    local zXcVbNmQwErTyUi = MachoMenuGetInputbox(CoordsHandle)
 
--- ═══════════════════════════════════════════════════════
---  WEAPON TAB
--- ═══════════════════════════════════════════════════════
+    if zXcVbNmQwErTyUi and zXcVbNmQwErTyUi ~= "" then
+        local aSdFgHjKlQwErTy, qWeRtYuIoPlMnBv, zLxKjHgFdSaPlMnBv = zXcVbNmQwErTyUi:match("([^,]+),%s*([^,]+),%s*([^,]+)")
+        aSdFgHjKlQwErTy = tonumber(aSdFgHjKlQwErTy)
+        qWeRtYuIoPlMnBv = tonumber(qWeRtYuIoPlMnBv)
+        zLxKjHgFdSaPlMnBv = tonumber(zLxKjHgFdSaPlMnBv)
 
--- [ Mods ]
-MachoMenuCheckbox(Weapon[1], "Infinite Ammo", function()
+        if aSdFgHjKlQwErTy and qWeRtYuIoPlMnBv and zLxKjHgFdSaPlMnBv then
+            MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
+                local function b0NtdqLZKW()
+                    local uYiTpLaNmZxCwEq = SetEntityCoordsNoOffset
+                    local nHgFdSaZxCvBnMq = PlayerPedId
+                    local XvMzAsQeTrBnLpK = IsPedInAnyVehicle
+                    local QeTyUvGhTrBnAzX = GetVehiclePedIsIn
+                    local BvNzMkJdHsLwQaZ = GetGroundZFor_3dCoord
+
+                    local x, y, z = %f, %f, %f
+                    local found, gZ = BvNzMkJdHsLwQaZ(x, y, z + 1000.0, true)
+                    if found then z = gZ + 1.0 end
+
+                    local ent = XvMzAsQeTrBnLpK(nHgFdSaZxCvBnMq(), false) and QeTyUvGhTrBnAzX(nHgFdSaZxCvBnMq(), false) or nHgFdSaZxCvBnMq()
+                    uYiTpLaNmZxCwEq(ent, x, y, z, false, false, false)
+                end
+
+                b0NtdqLZKW()
+            ]], aSdFgHjKlQwErTy, qWeRtYuIoPlMnBv, zLxKjHgFdSaPlMnBv))
+        end
+    end
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Waypoint", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function xQX7uzMNfb()
+            local mNbVcXtYuIoPlMn = GetFirstBlipInfoId
+            local zXcVbNmQwErTyUi = DoesBlipExist
+            local aSdFgHjKlQwErTy = GetBlipInfoIdCoord
+            local lKjHgFdSaPlMnBv = PlayerPedId
+            local qWeRtYuIoPlMnBv = SetEntityCoords
+
+            local function XcVrTyUiOpAsDfGh()
+                local RtYuIoPlMnBvZx = mNbVcXtYuIoPlMn(8)
+                if not zXcVbNmQwErTyUi(RtYuIoPlMnBvZx) then return nil end
+                return aSdFgHjKlQwErTy(RtYuIoPlMnBvZx)
+            end
+
+            local GhTyUoLpZmNbVcXq = XcVrTyUiOpAsDfGh()
+            if GhTyUoLpZmNbVcXq then
+                local QwErTyUiOpAsDfGh = lKjHgFdSaPlMnBv()
+                qWeRtYuIoPlMnBv(QwErTyUiOpAsDfGh, GhTyUoLpZmNbVcXq.x, GhTyUoLpZmNbVcXq.y, GhTyUoLpZmNbVcXq.z + 5.0, false, false, false, true)
+            end
+        end
+
+        xQX7uzMNfb()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "FIB Building", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function HAZ6YqLRbM()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 140.43, -750.52, 258.15
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        HAZ6YqLRbM()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Mission Row PD", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function oypB9FcNwK()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 425.1, -979.5, 30.7
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        oypB9FcNwK()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Pillbox Hospital", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function TmXU0zLa4e()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 308.6, -595.3, 43.28
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        TmXU0zLa4e()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Del Perro Pier", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function eLQN9XKwbJ()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = -1632.87, -1007.81, 13.07
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        eLQN9XKwbJ()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Grove Street", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function YrAFvPMkqt()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 109.63, -1943.14, 20.80
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        YrAFvPMkqt()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Legion Square", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function zdVCXL8rjp()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 229.21, -871.61, 30.49
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        zdVCXL8rjp()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "LS Customs", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function oKXpQUYwd5()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = -365.4, -131.8, 37.7
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        oKXpQUYwd5()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Maze Bank", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function E1tYUMowqF()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = -75.24, -818.95, 326.1
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        E1tYUMowqF()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Mirror Park", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function Ptn2qMBvYe()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 1039.2, -765.3, 57.9
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        Ptn2qMBvYe()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Vespucci Beach", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function gQZf7xYULe()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = -1223.8, -1516.6, 4.4
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        gQZf7xYULe()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Vinewood", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function JqXLKbvR20()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 293.2, 180.5, 104.3
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        JqXLKbvR20()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[1], "Sandy Shores", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function NxvTpL3qWz()
+            local aSdFgHjKlQwErTy = PlayerPedId
+            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
+            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
+            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+
+            local x, y, z = 1843.10, 3707.60, 33.52
+            local ped = aSdFgHjKlQwErTy()
+            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
+            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+        end
+
+        NxvTpL3qWz()
+    ]])
+end)
+
+MachoMenuButton(TeleportTabSections[2], "Print Current Coords", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function Xy9TqLzVmN()
+            local zXcVbNmQwErTyUi = GetEntityCoords
+            local aSdFgHjKlQwErTy = PlayerPedId
+
+            local coords = zXcVbNmQwErTyUi(aSdFgHjKlQwErTy())
+            local x, y, z = coords.x, coords.y, coords.z
+            print(string.format("[^3CAPTCHAS^7] [^4DEBUG^7] - %.2f, %.2f, %.2f", x, y, z))
+        end
+
+        Xy9TqLzVmN()
+    ]])
+end)
+
+-- Weapon Tab
+MachoMenuCheckbox(WeaponTabSections[1], "Infinite Ammo", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if LkJgFdSaQwErTy == nil then LkJgFdSaQwErTy = false end
         LkJgFdSaQwErTy = true
@@ -3625,7 +2963,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Weapon[1], "Explosive Ammo (DETECTABLE)", function()
+MachoMenuCheckbox(WeaponTabSections[1], "Explosive Ammo (DETECTABLE)", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if QzWxEdCvTrBnYu == nil then QzWxEdCvTrBnYu = false end
         QzWxEdCvTrBnYu = true
@@ -3661,7 +2999,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Weapon[1], "Oneshot Kill", function()
+MachoMenuCheckbox(WeaponTabSections[1], "Oneshot Kill", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if RfGtHyUjMiKoLp == nil then RfGtHyUjMiKoLp = false end
         RfGtHyUjMiKoLp = true
@@ -3704,245 +3042,9 @@ end, function()
     ]])
 end)
 
-local WeaponHandle = MachoMenuInputbox(Weapon[2], "Weapon:", "...")
+local WeaponHandle = MachoMenuInputbox(WeaponTabSections[2], "Weapon:", "...")
 
-MachoMenuCheckbox(Weapon[1], "No Reload", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        if _G.blossom_NoReload == nil then _G.blossom_NoReload = false end
-        _G.blossom_NoReload = true
-        CreateThread(function()
-            while _G.blossom_NoReload and not Unloaded do
-                local ped = PlayerPedId()
-                local _, weapon = GetCurrentPedWeapon(ped, true)
-                if weapon ~= 0 then
-                    SetPedInfiniteAmmoClip(ped, true)
-                end
-                Wait(0)
-            end
-            SetPedInfiniteAmmoClip(PlayerPedId(), false)
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        _G.blossom_NoReload = false
-        SetPedInfiniteAmmoClip(PlayerPedId(), false)
-    ]])
-end)
-
-MachoMenuCheckbox(Weapon[1], "Rainbow Gun", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        if _G.blossom_RainbowGun == nil then _G.blossom_RainbowGun = false end
-        _G.blossom_RainbowGun = true
-        CreateThread(function()
-            local offset = 0.0
-            while _G.blossom_RainbowGun and not Unloaded do
-                offset = offset + 0.05
-                local r = math.floor(127 + 127 * math.sin(offset))
-                local g = math.floor(127 + 127 * math.sin(offset + 2))
-                local b = math.floor(127 + 127 * math.sin(offset + 4))
-                local ped = PlayerPedId()
-                local _, weapon = GetCurrentPedWeapon(ped, true)
-                if weapon ~= 0 then
-                    SetWeaponObjectTintIndex(GetCurrentPedWeaponEntityIndex(ped), r)
-                end
-                Wait(50)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        _G.blossom_RainbowGun = false
-    ]])
-end)
-
--- Weapon Spawner by Category
-local WeaponCategoryLabels = {
-    "Pistols", "SMGs", "Shotguns", "Rifles", "Snipers", "Heavy", "Melee", "Throwables"
-}
-
-local WeaponCategoryData = {
-    ["Pistols"] = {
-        { label = "Pistol",                  value = "weapon_pistol" },
-        { label = "Pistol MK2",              value = "weapon_pistol_mk2" },
-        { label = "Combat Pistol",           value = "weapon_combatpistol" },
-        { label = "AP Pistol",               value = "weapon_appistol" },
-        { label = "Stun Gun",                value = "weapon_stungun" },
-        { label = "Pistol .50",              value = "weapon_pistol50" },
-        { label = "SNS Pistol",              value = "weapon_snspistol" },
-        { label = "Heavy Pistol",            value = "weapon_heavypistol" },
-        { label = "Vintage Pistol",          value = "weapon_vintagepistol" },
-        { label = "Flare Gun",               value = "weapon_flaregun" },
-        { label = "Marksman Pistol",         value = "weapon_marksmanpistol" },
-        { label = "Revolver",                value = "weapon_revolver" },
-        { label = "Revolver MK2",            value = "weapon_revolver_mk2" },
-        { label = "Double Action Revolver",  value = "weapon_doubleaction" },
-    },
-    ["SMGs"] = {
-        { label = "Micro SMG",      value = "weapon_microsmg" },
-        { label = "SMG",            value = "weapon_smg" },
-        { label = "SMG MK2",        value = "weapon_smg_mk2" },
-        { label = "Assault SMG",    value = "weapon_assaultsmg" },
-        { label = "Combat PDW",     value = "weapon_combatpdw" },
-        { label = "Machine Pistol", value = "weapon_machinepistol" },
-        { label = "Mini SMG",       value = "weapon_minismg" },
-    },
-    ["Shotguns"] = {
-        { label = "Pump Shotgun",        value = "weapon_pumpshotgun" },
-        { label = "Pump Shotgun MK2",    value = "weapon_pumpshotgun_mk2" },
-        { label = "Sawed-Off Shotgun",   value = "weapon_sawnoffshotgun" },
-        { label = "Assault Shotgun",     value = "weapon_assaultshotgun" },
-        { label = "Bullpup Shotgun",     value = "weapon_bullpupshotgun" },
-        { label = "Heavy Shotgun",       value = "weapon_heavyshotgun" },
-        { label = "Musket",              value = "weapon_musket" },
-        { label = "Double Barrel",       value = "weapon_dbshotgun" },
-        { label = "Sweeper Shotgun",     value = "weapon_autoshotgun" },
-    },
-    ["Rifles"] = {
-        { label = "Assault Rifle",       value = "weapon_assaultrifle" },
-        { label = "Assault Rifle MK2",   value = "weapon_assaultrifle_mk2" },
-        { label = "Carbine Rifle",       value = "weapon_carbinerifle" },
-        { label = "Carbine Rifle MK2",   value = "weapon_carbinerifle_mk2" },
-        { label = "Advanced Rifle",      value = "weapon_advancedrifle" },
-        { label = "Special Carbine",     value = "weapon_specialcarbine" },
-        { label = "Special Carbine MK2", value = "weapon_specialcarbine_mk2" },
-        { label = "Bullpup Rifle",       value = "weapon_bullpuprifle" },
-        { label = "Bullpup Rifle MK2",   value = "weapon_bullpuprifle_mk2" },
-        { label = "Military Rifle",      value = "weapon_militaryrifle" },
-    },
-    ["Snipers"] = {
-        { label = "Sniper Rifle",        value = "weapon_sniperrifle" },
-        { label = "Heavy Sniper",        value = "weapon_heavysniper" },
-        { label = "Heavy Sniper MK2",    value = "weapon_heavysniper_mk2" },
-        { label = "Marksman Rifle",      value = "weapon_marksmanrifle" },
-        { label = "Marksman Rifle MK2",  value = "weapon_marksmanrifle_mk2" },
-    },
-    ["Heavy"] = {
-        { label = "RPG",                       value = "weapon_rpg" },
-        { label = "Grenade Launcher",          value = "weapon_grenadelauncher" },
-        { label = "Minigun",                   value = "weapon_minigun" },
-        { label = "Firework Launcher",         value = "weapon_firework" },
-        { label = "Railgun",                   value = "weapon_railgun" },
-        { label = "Homing Launcher",           value = "weapon_hominglauncher" },
-        { label = "Compact Grenade Launcher",  value = "weapon_compactlauncher" },
-        { label = "Widowmaker",                value = "weapon_widowmaker" },
-    },
-    ["Melee"] = {
-        { label = "Knife",         value = "weapon_knife" },
-        { label = "Nightstick",    value = "weapon_nightstick" },
-        { label = "Hammer",        value = "weapon_hammer" },
-        { label = "Bat",           value = "weapon_bat" },
-        { label = "Crowbar",       value = "weapon_crowbar" },
-        { label = "Golf Club",     value = "weapon_golfclub" },
-        { label = "Bottle",        value = "weapon_bottle" },
-        { label = "Dagger",        value = "weapon_dagger" },
-        { label = "Hatchet",       value = "weapon_hatchet" },
-        { label = "Machete",       value = "weapon_machete" },
-        { label = "Switchblade",   value = "weapon_switchblade" },
-        { label = "Battle Axe",    value = "weapon_battleaxe" },
-        { label = "Pool Cue",      value = "weapon_poolcue" },
-        { label = "Wrench",        value = "weapon_wrench" },
-    },
-    ["Throwables"] = {
-        { label = "Grenade",           value = "weapon_grenade" },
-        { label = "Sticky Bomb",       value = "weapon_stickybomb" },
-        { label = "Proximity Mine",    value = "weapon_proxmine" },
-        { label = "Tear Gas",          value = "weapon_teargas" },
-        { label = "Molotov",           value = "weapon_molotov" },
-        { label = "Jerry Can",         value = "weapon_petrolcan" },
-        { label = "Snowball",          value = "weapon_snowball" },
-        { label = "Pipe Bomb",         value = "weapon_pipebomb" },
-        { label = "BZ Gas",            value = "weapon_bzgas" },
-    },
-}
-
-for _, catName in ipairs(WeaponCategoryLabels) do
-    local catWeapons = WeaponCategoryData[catName]
-    if catWeapons then
-        local labels = {}
-        local values = {}
-        for _, w in ipairs(catWeapons) do
-            table.insert(labels, w.label)
-            table.insert(values, w.value)
-        end
-        MachoMenuDropDown(Weapon[2], catName, function(index)
-            local weaponHash = values[index]
-            if weaponHash then
-                MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", string.format([[
-                    local ped = PlayerPedId()
-                    local wHash = GetHashKey("%s")
-                    GiveWeaponToPed(ped, wHash, 250, false, true)
-                ]], weaponHash))
-            end
-        end, table.unpack(labels))
-    end
-end
-
-
--- [ Utility ]
-MachoMenuButton(Weapon[1], "Remove All Weapons", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        RemoveAllPedWeapons(PlayerPedId(), true)
-    ]])
-end)
-
-MachoMenuButton(Weapon[1], "Refill Ammo", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function RefillAllAmmo()
-            local ped = PlayerPedId()
-            for _, weapon in ipairs(GetPedWeapons(ped)) do
-                SetPedAmmo(ped, weapon, 9999)
-            end
-        end
-        -- Fallback: give max ammo to current weapon
-        local ped = PlayerPedId()
-        local _, currentWeapon = GetCurrentPedWeapon(ped, true)
-        SetPedAmmo(ped, currentWeapon, 9999)
-        -- Try all common weapons
-        local weapons = {
-            GetHashKey("weapon_pistol"), GetHashKey("weapon_smg"), GetHashKey("weapon_assaultrifle"),
-            GetHashKey("weapon_carbinerifle"), GetHashKey("weapon_heavysniper"), GetHashKey("weapon_rpg"),
-            GetHashKey("weapon_minigun"), GetHashKey("weapon_shotgun"), GetHashKey("weapon_pumpshotgun"),
-        }
-        for _, wHash in ipairs(weapons) do
-            if HasPedGotWeapon(ped, wHash, false) then
-                SetPedAmmo(ped, wHash, 9999)
-            end
-        end
-    ]])
-end)
-
-MachoMenuDropDown(Weapon[1], "Aiming Style", function(index)
-    AnimationDropDownChoice = index
-end,
-    "Default",
-    "Gangster",
-    "Wild",
-    "Red Neck"
-)
-
-MachoMenuButton(Weapon[1], "Apply Aiming Style", function()
-    local Animation = AnimationMap[AnimationDropDownChoice]
-    if not Animation then return end
-
-    MachoInjectResource(CheckResource("oxmysql") and "oxmysql" or "any", ([[
-        local function vXK2dPLR07()
-            local UiOpAsDfGhJkLz = PlayerPedId
-            local PlMnBvCxZaSdFg = GetHashKey
-            local QwErTyUiOpAsDf = SetWeaponAnimationOverride
-
-            local MnBvCxZaSdFgHj = PlMnBvCxZaSdFg("%s")
-            QwErTyUiOpAsDf(UiOpAsDfGhJkLz(), MnBvCxZaSdFgHj)
-        end
-
-        vXK2dPLR07()
-
-    ]]):format(Animation.hash))
-end)
-
--- Additional Weapon Features from Wiped
-
--- [ Spawner ]
-MachoMenuButton(Weapon[2], "Spawn Weapon", function()
+MachoMenuButton(WeaponTabSections[2], "Spawn Weapon", function()
     local weaponName = MachoMenuGetInputbox(WeaponSpawnerBox)
 
     if weaponName and weaponName ~= "" then
@@ -3959,9 +3061,9 @@ MachoMenuButton(Weapon[2], "Spawn Weapon", function()
     end
 end)
 
--- local WeaponHandle = MachoMenuInputbox(Weapon[2], "Weapon:", "...")
+-- local WeaponHandle = MachoMenuInputbox(WeaponTabSections[2], "Weapon:", "...")
 
--- MachoMenuButton(Weapon[2], "Spawn Weapon", function()
+-- MachoMenuButton(WeaponTabSections[2], "Spawn Weapon", function()
 --     local gNpLmKjHyUjIqEr = MachoMenuGetInputbox(WeaponSpawnerBox)
 
 --     if gNpLmKjHyUjIqEr and gNpLmKjHyUjIqEr ~= "" then
@@ -4000,12 +3102,36 @@ local AnimationMap = {
     [3] = { name = "Red Neck", hash = "Hillbilly" }
 }
 
--- ═══════════════════════════════════════════════════════
---  VEHICLE TAB
--- ═══════════════════════════════════════════════════════
+MachoMenuDropDown(WeaponTabSections[3], "Aiming Style", function(index)
+    AnimationDropDownChoice = index
+end,
+    "Default",
+    "Gangster",
+    "Wild",
+    "Red Neck"
+)
 
--- [ Mods / Toggles ]
-MachoMenuCheckbox(Vehicle[1], "Vehicle Godmode", function()
+MachoMenuButton(WeaponTabSections[3], "Apply Aiming Style", function()
+    local Animation = AnimationMap[AnimationDropDownChoice]
+    if not Animation then return end
+
+    MachoInjectResource(CheckResource("oxmysql") and "oxmysql" or "any", ([[
+        local function vXK2dPLR07()
+            local UiOpAsDfGhJkLz = PlayerPedId
+            local PlMnBvCxZaSdFg = GetHashKey
+            local QwErTyUiOpAsDf = SetWeaponAnimationOverride
+
+            local MnBvCxZaSdFgHj = PlMnBvCxZaSdFg("%s")
+            QwErTyUiOpAsDf(UiOpAsDfGhJkLz(), MnBvCxZaSdFgHj)
+        end
+
+        vXK2dPLR07()
+
+    ]]):format(Animation.hash))
+end)
+
+-- Vehicle Tab
+MachoMenuCheckbox(VehicleTabSections[1], "Vehicle Godmode", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if zXcVbNmQwErTyUi == nil then zXcVbNmQwErTyUi = false end
         zXcVbNmQwErTyUi = true
@@ -4043,39 +3169,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[2], "Vehicle Invincible", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        if _G.blossom_VehInvinc == nil then _G.blossom_VehInvinc = false end
-        _G.blossom_VehInvinc = true
-        CreateThread(function()
-            while _G.blossom_VehInvinc and not Unloaded do
-                local ped = PlayerPedId()
-                local veh = GetVehiclePedIsIn(ped, false)
-                if veh and veh ~= 0 then
-                    SetEntityInvincible(veh, true)
-                    SetVehicleCanBeVisiblyDamaged(veh, false)
-                    SetVehicleCanBreak(veh, false)
-                    SetEntityProofs(veh, true, true, true, true, true, true, true, true)
-                end
-                Wait(0)
-            end
-            local ped = PlayerPedId()
-            local veh = GetVehiclePedIsIn(ped, true)
-            if veh and veh ~= 0 then
-                SetEntityInvincible(veh, false)
-                SetVehicleCanBeVisiblyDamaged(veh, true)
-                SetVehicleCanBreak(veh, true)
-                SetEntityProofs(veh, false, false, false, false, false, false, false, false)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        _G.blossom_VehInvinc = false
-    ]])
-end)
-
-MachoMenuCheckbox(Vehicle[1], "Force Vehicle Engine", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Force Vehicle Engine", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if GhYtReFdCxWaQzLp == nil then GhYtReFdCxWaQzLp = false end
         GhYtReFdCxWaQzLp = true
@@ -4137,7 +3231,7 @@ end, function()
 end)
 
 
-MachoMenuCheckbox(Vehicle[1], "Vehicle Auto Repair", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Vehicle Auto Repair", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if PlAsQwErTyUiOp == nil then PlAsQwErTyUiOp = false end
         PlAsQwErTyUiOp = true
@@ -4171,7 +3265,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Freeze Vehicle", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Freeze Vehicle", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if LzKxWcVbNmQwErTy == nil then LzKxWcVbNmQwErTy = false end
         LzKxWcVbNmQwErTy = true
@@ -4217,7 +3311,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Vehicle Hop", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Vehicle Hop", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if NuRqVxEyKiOlZm == nil then NuRqVxEyKiOlZm = false end
         NuRqVxEyKiOlZm = true
@@ -4251,7 +3345,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Rainbow Vehicle", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Rainbow Vehicle", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if GxRpVuNzYiTq == nil then GxRpVuNzYiTq = false end
         GxRpVuNzYiTq = true
@@ -4300,7 +3394,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Drift Mode (Hold Shift)", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Drift Mode (Hold Shift)", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if MqTwErYuIoLp == nil then MqTwErYuIoLp = false end
         MqTwErYuIoLp = true
@@ -4347,7 +3441,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Easy Handling", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Easy Handling", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if NvGhJkLpOiUy == nil then NvGhJkLpOiUy = false end
         NvGhJkLpOiUy = true
@@ -4395,7 +3489,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Shift Boost", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Shift Boost", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if QwErTyUiOpSh == nil then QwErTyUiOpSh = false end
         QwErTyUiOpSh = true
@@ -4431,7 +3525,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Instant Breaks", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Instant Breaks", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if VkLpOiUyTrEq == nil then VkLpOiUyTrEq = false end
         VkLpOiUyTrEq = true
@@ -4466,7 +3560,7 @@ end, function()
     ]])
 end)
 
-MachoMenuCheckbox(Vehicle[1], "Unlimited Fuel", function()
+MachoMenuCheckbox(VehicleTabSections[1], "Unlimited Fuel", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if BlNkJmLzXcVb == nil then BlNkJmLzXcVb = false end
         BlNkJmLzXcVb = true
@@ -4501,331 +3595,8 @@ end, function()
     ]])
 end)
 
-local LicensePlateHandle = MachoMenuInputbox(Vehicle[2], "License Plate:", "...")
-MachoMenuCheckbox(Vehicle[2], "Infinite Fuel (Toggle)", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        if _G.blossom_InfFuel == nil then _G.blossom_InfFuel = false end
-        _G.blossom_InfFuel = true
-        CreateThread(function()
-            while _G.blossom_InfFuel and not Unloaded do
-                local ped = PlayerPedId()
-                local veh = GetVehiclePedIsIn(ped, false)
-                if veh and veh ~= 0 then
-                    SetVehicleFuelLevel(veh, 100.0)
-                end
-                Wait(1000)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        _G.blossom_InfFuel = false
-    ]])
-end)
-
-MachoMenuCheckbox(Vehicle[2], "Engine Power Boost", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        if _G.blossom_EngPow == nil then _G.blossom_EngPow = false end
-        _G.blossom_EngPow = true
-        CreateThread(function()
-            while _G.blossom_EngPow and not Unloaded do
-                local ped = PlayerPedId()
-                local veh = GetVehiclePedIsIn(ped, false)
-                if veh and veh ~= 0 then
-                    SetVehicleStrong(veh, true)
-                    SetVehicleGravityAmount(veh, 60.0)
-                end
-                Wait(0)
-            end
-            local ped = PlayerPedId()
-            local veh = GetVehiclePedIsIn(ped, false)
-            if veh and veh ~= 0 then
-                SetVehicleStrong(veh, false)
-                SetVehicleGravityAmount(veh, 9.8)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        _G.blossom_EngPow = false
-    ]])
-end)
-
--- Emote Tab
-
--- [ Actions ]
-MachoMenuButton(Vehicle[2], "Repair Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function FgN7LqxZyP()
-            local aBcD = PlayerPedId
-            local eFgH = GetVehiclePedIsIn
-            local iJkL = SetVehicleFixed
-            local mNoP = SetVehicleDeformationFixed
-
-            local p = aBcD()
-            local v = eFgH(p, false)
-            if v and v ~= 0 then
-                iJkL(v)
-                mNoP(v)
-            end
-        end
-
-        FgN7LqxZyP()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Flip Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function vXmYLT9pq2()
-            local a = PlayerPedId
-            local b = GetVehiclePedIsIn
-            local c = GetEntityHeading
-            local d = SetEntityRotation
-
-            local ped = a()
-            local veh = b(ped, false)
-            if veh and veh ~= 0 then
-                d(veh, 0.0, 0.0, c(veh))
-            end
-        end
-
-        vXmYLT9pq2()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Clean Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function qPwRYKz7mL()
-            local a = PlayerPedId
-            local b = GetVehiclePedIsIn
-            local c = SetVehicleDirtLevel
-
-            local ped = a()
-            local veh = b(ped, false)
-            if veh and veh ~= 0 then
-                c(veh, 0.0)
-            end
-        end
-
-        qPwRYKz7mL()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Delete Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function LXpTqWvR80()
-            local aQw = PlayerPedId
-            local bEr = GetVehiclePedIsIn
-            local cTy = DoesEntityExist
-            local dUi = NetworkHasControlOfEntity
-            local eOp = SetEntityAsMissionEntity
-            local fAs = DeleteEntity
-            local gDf = DeleteVehicle
-            local hJk = SetVehicleHasBeenOwnedByPlayer
-
-            local ped = aQw()
-            local veh = bEr(ped, false)
-
-            if veh and veh ~= 0 and cTy(veh) then
-                hJk(veh, true)
-                eOp(veh, true, true)
-
-                if dUi(veh) then
-                    fAs(veh)
-                    gDf(veh)
-                end
-            end
-
-        end
-
-        LXpTqWvR80()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Toggle Vehicle Engine", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function NKzqVoXYLm()
-            local a = PlayerPedId
-            local b = GetVehiclePedIsIn
-            local c = GetIsVehicleEngineRunning
-            local d = SetVehicleEngineOn
-
-            local ped = a()
-            local veh = b(ped, false)
-            if veh and veh ~= 0 then
-                if c(veh) then
-                    d(veh, false, true, true)
-                else
-                    d(veh, true, true, false)
-                end
-            end
-        end
-
-        NKzqVoXYLm()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Max Vehicle Upgrades", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function XzPmLqRnWyBtVkGhQe()
-            local FnUhIpOyLkTrEzSd = PlayerPedId
-            local VmBgTnQpLcZaWdEx = GetVehiclePedIsIn
-            local RfDsHuNjMaLpOyBt = SetVehicleModKit
-            local AqWsEdRzXcVtBnMa = SetVehicleWheelType
-            local TyUiOpAsDfGhJkLz = GetNumVehicleMods
-            local QwErTyUiOpAsDfGh = SetVehicleMod
-            local ZxCvBnMqWeRtYuIo = ToggleVehicleMod
-            local MnBvCxZaSdFgHjKl = SetVehicleWindowTint
-            local LkJhGfDsQaZwXeCr = SetVehicleTyresCanBurst
-            local UjMiKoLpNwAzSdFg = SetVehicleExtra
-            local RvTgYhNuMjIkLoPb = DoesExtraExist
-
-            local lzQwXcVeTrBnMkOj = FnUhIpOyLkTrEzSd()
-            local jwErTyUiOpMzNaLk = VmBgTnQpLcZaWdEx(lzQwXcVeTrBnMkOj, false)
-            if not jwErTyUiOpMzNaLk or jwErTyUiOpMzNaLk == 0 then return end
-
-            RfDsHuNjMaLpOyBt(jwErTyUiOpMzNaLk, 0)
-            AqWsEdRzXcVtBnMa(jwErTyUiOpMzNaLk, 7)
-
-            for XyZoPqRtWnEsDfGh = 0, 16 do
-                local uYtReWqAzXsDcVf = TyUiOpAsDfGhJkLz(jwErTyUiOpMzNaLk, XyZoPqRtWnEsDfGh)
-                if uYtReWqAzXsDcVf and uYtReWqAzXsDcVf > 0 then
-                    QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, XyZoPqRtWnEsDfGh, uYtReWqAzXsDcVf - 1, false)
-                end
-            end
-
-            QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 14, 16, false)
-
-            local aSxDcFgHiJuKoLpM = TyUiOpAsDfGhJkLz(jwErTyUiOpMzNaLk, 15)
-            if aSxDcFgHiJuKoLpM and aSxDcFgHiJuKoLpM > 1 then
-                QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 15, aSxDcFgHiJuKoLpM - 2, false)
-            end
-
-            for QeTrBnMkOjHuYgFv = 17, 22 do
-                ZxCvBnMqWeRtYuIo(jwErTyUiOpMzNaLk, QeTrBnMkOjHuYgFv, true)
-            end
-
-            QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 23, 1, false)
-            QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 24, 1, false)
-
-            for TpYuIoPlMnBvCxZq = 1, 12 do
-                if RvTgYhNuMjIkLoPb(jwErTyUiOpMzNaLk, TpYuIoPlMnBvCxZq) then
-                    UjMiKoLpNwAzSdFg(jwErTyUiOpMzNaLk, TpYuIoPlMnBvCxZq, false)
-                end
-            end
-
-            MnBvCxZaSdFgHjKl(jwErTyUiOpMzNaLk, 1)
-            LkJhGfDsQaZwXeCr(jwErTyUiOpMzNaLk, false)
-        end
-
-        XzPmLqRnWyBtVkGhQe()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Teleport into Closest Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function uPKcoBaEHmnK()
-            local ziCFzHyzxaLX = SetPedIntoVehicle
-            local YPPvDlOGBghA = GetClosestVehicle
-
-            local Coords = GetEntityCoords(PlayerPedId())
-            local vehicle = YPPvDlOGBghA(Coords.x, Coords.y, Coords.z, 15.0, 0, 70)
-
-            if DoesEntityExist(vehicle) and not IsPedInAnyVehicle(PlayerPedId(), false) then
-                if GetPedInVehicleSeat(vehicle, -1) == 0 then
-                    ziCFzHyzxaLX(PlayerPedId(), vehicle, -1)
-                else
-                    ziCFzHyzxaLX(PlayerPedId(), vehicle, 0)
-                end
-            end
-        end
-
-        uPKcoBaEHmnK()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Unlock Closest Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function TpLMqKtXwZ()
-            local AsoYuTrBnMvCxZaQw = PlayerPedId
-            local GhrTnLpKjUyVbMnZx = GetEntityCoords
-            local UyeWsDcXzQvBnMaLp = GetClosestVehicle
-            local ZmkLpQwErTyUiOpAs = DoesEntityExist
-            local VczNmLoJhBgVfCdEx = SetEntityAsMissionEntity
-            local EqWoXyBkVsNzQuH = SetVehicleDoorsLocked
-            local YxZwQvTrBnMaSdFgHj = SetVehicleDoorsLockedForAllPlayers
-            local RtYuIoPlMnBvCxZaSd = SetVehicleHasBeenOwnedByPlayer
-            local LkJhGfDsAzXwCeVrBt = NetworkHasControlOfEntity
-
-            local ped = AsoYuTrBnMvCxZaQw()
-            local coords = GhrTnLpKjUyVbMnZx(ped)
-            local veh = UyeWsDcXzQvBnMaLp(coords.x, coords.y, coords.z, 10.0, 0, 70)
-
-            if veh and ZmkLpQwErTyUiOpAs(veh) and LkJhGfDsAzXwCeVrBt(veh) then
-                VczNmLoJhBgVfCdEx(veh, true, true)
-                RtYuIoPlMnBvCxZaSd(veh, true)
-                EqWoXyBkVsNzQuH(veh, 1)
-                YxZwQvTrBnMaSdFgHj(veh, false)
-            end
-
-        end
-
-        TpLMqKtXwZ()
-    ]])
-end)
-
-MachoMenuButton(Vehicle[2], "Lock Closest Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function tRYpZvKLxQ()
-            local WqEoXyBkVsNzQuH = PlayerPedId
-            local LoKjBtWxFhPoZuR = GetEntityCoords
-            local VbNmAsDfGhJkLzXcVb = GetClosestVehicle
-            local TyUiOpAsDfGhJkLzXc = DoesEntityExist
-            local PlMnBvCxZaSdFgTrEq = SetEntityAsMissionEntity
-            local KjBtWxFhPoZuRZlK = SetVehicleHasBeenOwnedByPlayer
-            local AsDfGhJkLzXcVbNmQwE = SetVehicleDoorsLocked
-            local QwEoXyBkVsNzQuHL = SetVehicleDoorsLockedForAllPlayers
-            local ZxCvBnMaSdFgTrEqWz = NetworkHasControlOfEntity
-
-            local ped = WqEoXyBkVsNzQuH()
-            local coords = LoKjBtWxFhPoZuR(ped)
-            local veh = VbNmAsDfGhJkLzXcVb(coords.x, coords.y, coords.z, 10.0, 0, 70)
-
-            if veh and TyUiOpAsDfGhJkLzXc(veh) and ZxCvBnMaSdFgTrEqWz(veh) then
-                PlMnBvCxZaSdFgTrEq(veh, true, true)
-                KjBtWxFhPoZuRZlK(veh, true)
-                AsDfGhJkLzXcVbNmQwE(veh, 2)
-                QwEoXyBkVsNzQuHL(veh, true)
-            end
-        end
-
-        tRYpZvKLxQ()
-    ]])
-end)
-
--- Additional Vehicle Features from Wiped
-MachoMenuButton(Vehicle[2], "Print Custom Cars", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local allVehicles = {}
-        local numVeh = GetNumResources and 0 or 0
-        -- Scan all world vehicles and find custom/modded ones
-        local gameVehicles = GetGamePool("CVehicle")
-        for _, veh in ipairs(gameVehicles) do
-            if DoesEntityExist(veh) then
-                local model = GetDisplayNameFromVehicleModel(GetEntityModel(veh))
-                if model and model ~= "CARNOTFOUND" then
-                    table.insert(allVehicles, string.lower(model))
-                end
-            end
-        end
-        print("[blossom] Vehicles on server: " .. table.concat(allVehicles, ", "))
-    ]])
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Custom cars printed to console (F8).")
-end)
-
-
--- [ Spawning & Plate ]
-MachoMenuButton(Vehicle[2], "Set License Plate", function()
+local LicensePlateHandle = MachoMenuInputbox(VehicleTabSections[2], "License Plate:", "...")
+MachoMenuButton(VehicleTabSections[2], "Set License Plate", function()
     local LicensePlate = MachoMenuGetInputbox(LicensePlateHandle)
 
     if type(LicensePlate) == "string" and LicensePlate ~= "" then
@@ -4851,8 +3622,8 @@ MachoMenuButton(Vehicle[2], "Set License Plate", function()
     end
 end)
 
-local VehicleSpawnerBox = MachoMenuInputbox(Vehicle[2], "Vehicle Model:", "...")
-MachoMenuButton(Vehicle[2], "Spawn Car", function()
+local VehicleSpawnerBox = MachoMenuInputbox(VehicleTabSections[2], "Vehicle Model:", "...")
+MachoMenuButton(VehicleTabSections[2], "Spawn Car", function()
     local VehicleModel = MachoMenuGetInputbox(VehicleSpawnerBox)
 
     local waveShieldRunning = GetResourceState("WaveShield") == "started"
@@ -4938,311 +3709,257 @@ MachoMenuButton(Vehicle[2], "Spawn Car", function()
     end
 end)
 
+MachoMenuButton(VehicleTabSections[3], "Repair Vehicle", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function FgN7LqxZyP()
+            local aBcD = PlayerPedId
+            local eFgH = GetVehiclePedIsIn
+            local iJkL = SetVehicleFixed
+            local mNoP = SetVehicleDeformationFixed
 
--- ═══════════════════════════════════════════════════════
---  TELEPORT TAB
--- ═══════════════════════════════════════════════════════
+            local p = aBcD()
+            local v = eFgH(p, false)
+            if v and v ~= 0 then
+                iJkL(v)
+                mNoP(v)
+            end
+        end
 
--- [ Locations ]
--- Teleport Tab
-local CoordsHandle = MachoMenuInputbox(Teleport[1], "Coords:", "x, y, z")
-MachoMenuButton(Teleport[1], "Teleport to Coords", function()
-    local zXcVbNmQwErTyUi = MachoMenuGetInputbox(CoordsHandle)
+        FgN7LqxZyP()
+    ]])
+end)
 
-    if zXcVbNmQwErTyUi and zXcVbNmQwErTyUi ~= "" then
-        local aSdFgHjKlQwErTy, qWeRtYuIoPlMnBv, zLxKjHgFdSaPlMnBv = zXcVbNmQwErTyUi:match("([^,]+),%s*([^,]+),%s*([^,]+)")
-        aSdFgHjKlQwErTy = tonumber(aSdFgHjKlQwErTy)
-        qWeRtYuIoPlMnBv = tonumber(qWeRtYuIoPlMnBv)
-        zLxKjHgFdSaPlMnBv = tonumber(zLxKjHgFdSaPlMnBv)
+MachoMenuButton(VehicleTabSections[3], "Flip Vehicle", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function vXmYLT9pq2()
+            local a = PlayerPedId
+            local b = GetVehiclePedIsIn
+            local c = GetEntityHeading
+            local d = SetEntityRotation
 
-        if aSdFgHjKlQwErTy and qWeRtYuIoPlMnBv and zLxKjHgFdSaPlMnBv then
-            MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-                local function b0NtdqLZKW()
-                    local uYiTpLaNmZxCwEq = SetEntityCoordsNoOffset
-                    local nHgFdSaZxCvBnMq = PlayerPedId
-                    local XvMzAsQeTrBnLpK = IsPedInAnyVehicle
-                    local QeTyUvGhTrBnAzX = GetVehiclePedIsIn
-                    local BvNzMkJdHsLwQaZ = GetGroundZFor_3dCoord
+            local ped = a()
+            local veh = b(ped, false)
+            if veh and veh ~= 0 then
+                d(veh, 0.0, 0.0, c(veh))
+            end
+        end
 
-                    local x, y, z = %f, %f, %f
-                    local found, gZ = BvNzMkJdHsLwQaZ(x, y, z + 1000.0, true)
-                    if found then z = gZ + 1.0 end
+        vXmYLT9pq2()
+    ]])
+end)
 
-                    local ent = XvMzAsQeTrBnLpK(nHgFdSaZxCvBnMq(), false) and QeTyUvGhTrBnAzX(nHgFdSaZxCvBnMq(), false) or nHgFdSaZxCvBnMq()
-                    uYiTpLaNmZxCwEq(ent, x, y, z, false, false, false)
+MachoMenuButton(VehicleTabSections[3], "Clean Vehicle", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function qPwRYKz7mL()
+            local a = PlayerPedId
+            local b = GetVehiclePedIsIn
+            local c = SetVehicleDirtLevel
+
+            local ped = a()
+            local veh = b(ped, false)
+            if veh and veh ~= 0 then
+                c(veh, 0.0)
+            end
+        end
+
+        qPwRYKz7mL()
+    ]])
+end)
+
+MachoMenuButton(VehicleTabSections[3], "Delete Vehicle", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function LXpTqWvR80()
+            local aQw = PlayerPedId
+            local bEr = GetVehiclePedIsIn
+            local cTy = DoesEntityExist
+            local dUi = NetworkHasControlOfEntity
+            local eOp = SetEntityAsMissionEntity
+            local fAs = DeleteEntity
+            local gDf = DeleteVehicle
+            local hJk = SetVehicleHasBeenOwnedByPlayer
+
+            local ped = aQw()
+            local veh = bEr(ped, false)
+
+            if veh and veh ~= 0 and cTy(veh) then
+                hJk(veh, true)
+                eOp(veh, true, true)
+
+                if dUi(veh) then
+                    fAs(veh)
+                    gDf(veh)
                 end
-
-                b0NtdqLZKW()
-            ]], aSdFgHjKlQwErTy, qWeRtYuIoPlMnBv, zLxKjHgFdSaPlMnBv))
-        end
-    end
-end)
-
-MachoMenuButton(Teleport[1], "Waypoint", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function xQX7uzMNfb()
-            local mNbVcXtYuIoPlMn = GetFirstBlipInfoId
-            local zXcVbNmQwErTyUi = DoesBlipExist
-            local aSdFgHjKlQwErTy = GetBlipInfoIdCoord
-            local lKjHgFdSaPlMnBv = PlayerPedId
-            local qWeRtYuIoPlMnBv = SetEntityCoords
-
-            local function XcVrTyUiOpAsDfGh()
-                local RtYuIoPlMnBvZx = mNbVcXtYuIoPlMn(8)
-                if not zXcVbNmQwErTyUi(RtYuIoPlMnBvZx) then return nil end
-                return aSdFgHjKlQwErTy(RtYuIoPlMnBvZx)
             end
 
-            local GhTyUoLpZmNbVcXq = XcVrTyUiOpAsDfGh()
-            if GhTyUoLpZmNbVcXq then
-                local QwErTyUiOpAsDfGh = lKjHgFdSaPlMnBv()
-                qWeRtYuIoPlMnBv(QwErTyUiOpAsDfGh, GhTyUoLpZmNbVcXq.x, GhTyUoLpZmNbVcXq.y, GhTyUoLpZmNbVcXq.z + 5.0, false, false, false, true)
+        end
+
+        LXpTqWvR80()
+    ]])
+end)
+
+MachoMenuButton(VehicleTabSections[3], "Toggle Vehicle Engine", function()
+    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
+        local function NKzqVoXYLm()
+            local a = PlayerPedId
+            local b = GetVehiclePedIsIn
+            local c = GetIsVehicleEngineRunning
+            local d = SetVehicleEngineOn
+
+            local ped = a()
+            local veh = b(ped, false)
+            if veh and veh ~= 0 then
+                if c(veh) then
+                    d(veh, false, true, true)
+                else
+                    d(veh, true, true, false)
+                end
             end
         end
 
-        xQX7uzMNfb()
+        NKzqVoXYLm()
     ]])
 end)
 
-MachoMenuButton(Teleport[1], "FIB Building", function()
+MachoMenuButton(VehicleTabSections[3], "Max Vehicle Upgrades", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function HAZ6YqLRbM()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+        local function XzPmLqRnWyBtVkGhQe()
+            local FnUhIpOyLkTrEzSd = PlayerPedId
+            local VmBgTnQpLcZaWdEx = GetVehiclePedIsIn
+            local RfDsHuNjMaLpOyBt = SetVehicleModKit
+            local AqWsEdRzXcVtBnMa = SetVehicleWheelType
+            local TyUiOpAsDfGhJkLz = GetNumVehicleMods
+            local QwErTyUiOpAsDfGh = SetVehicleMod
+            local ZxCvBnMqWeRtYuIo = ToggleVehicleMod
+            local MnBvCxZaSdFgHjKl = SetVehicleWindowTint
+            local LkJhGfDsQaZwXeCr = SetVehicleTyresCanBurst
+            local UjMiKoLpNwAzSdFg = SetVehicleExtra
+            local RvTgYhNuMjIkLoPb = DoesExtraExist
 
-            local x, y, z = 140.43, -750.52, 258.15
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+            local lzQwXcVeTrBnMkOj = FnUhIpOyLkTrEzSd()
+            local jwErTyUiOpMzNaLk = VmBgTnQpLcZaWdEx(lzQwXcVeTrBnMkOj, false)
+            if not jwErTyUiOpMzNaLk or jwErTyUiOpMzNaLk == 0 then return end
+
+            RfDsHuNjMaLpOyBt(jwErTyUiOpMzNaLk, 0)
+            AqWsEdRzXcVtBnMa(jwErTyUiOpMzNaLk, 7)
+
+            for XyZoPqRtWnEsDfGh = 0, 16 do
+                local uYtReWqAzXsDcVf = TyUiOpAsDfGhJkLz(jwErTyUiOpMzNaLk, XyZoPqRtWnEsDfGh)
+                if uYtReWqAzXsDcVf and uYtReWqAzXsDcVf > 0 then
+                    QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, XyZoPqRtWnEsDfGh, uYtReWqAzXsDcVf - 1, false)
+                end
+            end
+
+            QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 14, 16, false)
+
+            local aSxDcFgHiJuKoLpM = TyUiOpAsDfGhJkLz(jwErTyUiOpMzNaLk, 15)
+            if aSxDcFgHiJuKoLpM and aSxDcFgHiJuKoLpM > 1 then
+                QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 15, aSxDcFgHiJuKoLpM - 2, false)
+            end
+
+            for QeTrBnMkOjHuYgFv = 17, 22 do
+                ZxCvBnMqWeRtYuIo(jwErTyUiOpMzNaLk, QeTrBnMkOjHuYgFv, true)
+            end
+
+            QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 23, 1, false)
+            QwErTyUiOpAsDfGh(jwErTyUiOpMzNaLk, 24, 1, false)
+
+            for TpYuIoPlMnBvCxZq = 1, 12 do
+                if RvTgYhNuMjIkLoPb(jwErTyUiOpMzNaLk, TpYuIoPlMnBvCxZq) then
+                    UjMiKoLpNwAzSdFg(jwErTyUiOpMzNaLk, TpYuIoPlMnBvCxZq, false)
+                end
+            end
+
+            MnBvCxZaSdFgHjKl(jwErTyUiOpMzNaLk, 1)
+            LkJhGfDsQaZwXeCr(jwErTyUiOpMzNaLk, false)
         end
 
-        HAZ6YqLRbM()
+        XzPmLqRnWyBtVkGhQe()
     ]])
 end)
 
-MachoMenuButton(Teleport[1], "Mission Row PD", function()
+MachoMenuButton(VehicleTabSections[3], "Teleport into Closest Vehicle", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function oypB9FcNwK()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+        local function uPKcoBaEHmnK()
+            local ziCFzHyzxaLX = SetPedIntoVehicle
+            local YPPvDlOGBghA = GetClosestVehicle
 
-            local x, y, z = 425.1, -979.5, 30.7
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+            local Coords = GetEntityCoords(PlayerPedId())
+            local vehicle = YPPvDlOGBghA(Coords.x, Coords.y, Coords.z, 15.0, 0, 70)
+
+            if DoesEntityExist(vehicle) and not IsPedInAnyVehicle(PlayerPedId(), false) then
+                if GetPedInVehicleSeat(vehicle, -1) == 0 then
+                    ziCFzHyzxaLX(PlayerPedId(), vehicle, -1)
+                else
+                    ziCFzHyzxaLX(PlayerPedId(), vehicle, 0)
+                end
+            end
         end
 
-        oypB9FcNwK()
+        uPKcoBaEHmnK()
     ]])
 end)
 
-MachoMenuButton(Teleport[1], "Pillbox Hospital", function()
+MachoMenuButton(VehicleTabSections[3], "Unlock Closest Vehicle", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function TmXU0zLa4e()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+        local function TpLMqKtXwZ()
+            local AsoYuTrBnMvCxZaQw = PlayerPedId
+            local GhrTnLpKjUyVbMnZx = GetEntityCoords
+            local UyeWsDcXzQvBnMaLp = GetClosestVehicle
+            local ZmkLpQwErTyUiOpAs = DoesEntityExist
+            local VczNmLoJhBgVfCdEx = SetEntityAsMissionEntity
+            local EqWoXyBkVsNzQuH = SetVehicleDoorsLocked
+            local YxZwQvTrBnMaSdFgHj = SetVehicleDoorsLockedForAllPlayers
+            local RtYuIoPlMnBvCxZaSd = SetVehicleHasBeenOwnedByPlayer
+            local LkJhGfDsAzXwCeVrBt = NetworkHasControlOfEntity
 
-            local x, y, z = 308.6, -595.3, 43.28
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+            local ped = AsoYuTrBnMvCxZaQw()
+            local coords = GhrTnLpKjUyVbMnZx(ped)
+            local veh = UyeWsDcXzQvBnMaLp(coords.x, coords.y, coords.z, 10.0, 0, 70)
+
+            if veh and ZmkLpQwErTyUiOpAs(veh) and LkJhGfDsAzXwCeVrBt(veh) then
+                VczNmLoJhBgVfCdEx(veh, true, true)
+                RtYuIoPlMnBvCxZaSd(veh, true)
+                EqWoXyBkVsNzQuH(veh, 1)
+                YxZwQvTrBnMaSdFgHj(veh, false)
+            end
+
         end
 
-        TmXU0zLa4e()
+        TpLMqKtXwZ()
     ]])
 end)
 
-MachoMenuButton(Teleport[1], "Del Perro Pier", function()
+MachoMenuButton(VehicleTabSections[3], "Lock Closest Vehicle", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function eLQN9XKwbJ()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
+        local function tRYpZvKLxQ()
+            local WqEoXyBkVsNzQuH = PlayerPedId
+            local LoKjBtWxFhPoZuR = GetEntityCoords
+            local VbNmAsDfGhJkLzXcVb = GetClosestVehicle
+            local TyUiOpAsDfGhJkLzXc = DoesEntityExist
+            local PlMnBvCxZaSdFgTrEq = SetEntityAsMissionEntity
+            local KjBtWxFhPoZuRZlK = SetVehicleHasBeenOwnedByPlayer
+            local AsDfGhJkLzXcVbNmQwE = SetVehicleDoorsLocked
+            local QwEoXyBkVsNzQuHL = SetVehicleDoorsLockedForAllPlayers
+            local ZxCvBnMaSdFgTrEqWz = NetworkHasControlOfEntity
 
-            local x, y, z = -1632.87, -1007.81, 13.07
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
+            local ped = WqEoXyBkVsNzQuH()
+            local coords = LoKjBtWxFhPoZuR(ped)
+            local veh = VbNmAsDfGhJkLzXcVb(coords.x, coords.y, coords.z, 10.0, 0, 70)
+
+            if veh and TyUiOpAsDfGhJkLzXc(veh) and ZxCvBnMaSdFgTrEqWz(veh) then
+                PlMnBvCxZaSdFgTrEq(veh, true, true)
+                KjBtWxFhPoZuRZlK(veh, true)
+                AsDfGhJkLzXcVbNmQwE(veh, 2)
+                QwEoXyBkVsNzQuHL(veh, true)
+            end
         end
 
-        eLQN9XKwbJ()
+        tRYpZvKLxQ()
     ]])
 end)
 
-MachoMenuButton(Teleport[1], "Grove Street", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function YrAFvPMkqt()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = 109.63, -1943.14, 20.80
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        YrAFvPMkqt()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "Legion Square", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function zdVCXL8rjp()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = 229.21, -871.61, 30.49
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        zdVCXL8rjp()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "LS Customs", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function oKXpQUYwd5()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = -365.4, -131.8, 37.7
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        oKXpQUYwd5()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "Maze Bank", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function E1tYUMowqF()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = -75.24, -818.95, 326.1
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        E1tYUMowqF()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "Mirror Park", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function Ptn2qMBvYe()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = 1039.2, -765.3, 57.9
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        Ptn2qMBvYe()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "Vespucci Beach", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function gQZf7xYULe()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = -1223.8, -1516.6, 4.4
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        gQZf7xYULe()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "Vinewood", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function JqXLKbvR20()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = 293.2, 180.5, 104.3
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        JqXLKbvR20()
-    ]])
-end)
-
-MachoMenuButton(Teleport[1], "Sandy Shores", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function NxvTpL3qWz()
-            local aSdFgHjKlQwErTy = PlayerPedId
-            local zXcVbNmQwErTyUi = IsPedInAnyVehicle
-            local qWeRtYuIoPlMnBv = GetVehiclePedIsIn
-            local xCvBnMqWeRtYuIo = SetEntityCoordsNoOffset
-
-            local x, y, z = 1843.10, 3707.60, 33.52
-            local ped = aSdFgHjKlQwErTy()
-            local ent = zXcVbNmQwErTyUi(ped, false) and qWeRtYuIoPlMnBv(ped, false) or ped
-            xCvBnMqWeRtYuIo(ent, x, y, z, false, false, false)
-        end
-
-        NxvTpL3qWz()
-    ]])
-end)
-
-
--- [ Other ]
-MachoMenuButton(Teleport[2], "Print Current Coords", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
-        local function Xy9TqLzVmN()
-            local zXcVbNmQwErTyUi = GetEntityCoords
-            local aSdFgHjKlQwErTy = PlayerPedId
-
-            local coords = zXcVbNmQwErTyUi(aSdFgHjKlQwErTy())
-            local x, y, z = coords.x, coords.y, coords.z
-            print(string.format("[^3CAPTCHAS^7] [^4DEBUG^7] - %.2f, %.2f, %.2f", x, y, z))
-        end
-
-        Xy9TqLzVmN()
-    ]])
-end)
-
--- ═══════════════════════════════════════════════════════
---  ANIMATIONS TAB
--- ═══════════════════════════════════════════════════════
-
--- [ Force Emotes ]
-MachoMenuButton(Anim[1], "Detach All Entitys", function()
+-- Emote Tab
+MachoMenuButton(EmoteTabSections[1], "Detach All Entitys", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function zXqLJWt7pN()
             local xPvA71LtqzW = ClearPedTasks
@@ -5256,7 +3973,7 @@ MachoMenuButton(Anim[1], "Detach All Entitys", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Twerk On Them", function()
+MachoMenuButton(EmoteTabSections[1], "Twerk On Them", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function OyWTpKvmXq()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5301,7 +4018,7 @@ MachoMenuButton(Anim[1], "Twerk On Them", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Give Them Backshots", function()
+MachoMenuButton(EmoteTabSections[1], "Give Them Backshots", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function bXzLqPTMn9()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5347,7 +4064,7 @@ MachoMenuButton(Anim[1], "Give Them Backshots", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Wank On Them", function()
+MachoMenuButton(EmoteTabSections[1], "Wank On Them", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function qXW7YpLtKv()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5390,7 +4107,7 @@ MachoMenuButton(Anim[1], "Wank On Them", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Piggyback On Player", function()
+MachoMenuButton(EmoteTabSections[1], "Piggyback On Player", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function RtKpqLmXZV()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5435,7 +4152,7 @@ MachoMenuButton(Anim[1], "Piggyback On Player", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Blame Arrest", function()
+MachoMenuButton(EmoteTabSections[1], "Blame Arrest", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function WXY7LpqKto()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5480,7 +4197,7 @@ MachoMenuButton(Anim[1], "Blame Arrest", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Blame Carry", function()
+MachoMenuButton(EmoteTabSections[1], "Blame Carry", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function KmXYpTzqLW()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5525,7 +4242,7 @@ MachoMenuButton(Anim[1], "Blame Carry", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Sit On Them", function()
+MachoMenuButton(EmoteTabSections[1], "Sit On Them", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function PxKvqLtNYz()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5561,7 +4278,7 @@ MachoMenuButton(Anim[1], "Sit On Them", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Ride Driver", function()
+MachoMenuButton(EmoteTabSections[1], "Ride Driver", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function vZqPWLXm97()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5606,7 +4323,7 @@ MachoMenuButton(Anim[1], "Ride Driver", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Blow Driver", function()
+MachoMenuButton(EmoteTabSections[1], "Blow Driver", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function qPLWtXYzKm()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5649,7 +4366,7 @@ MachoMenuButton(Anim[1], "Blow Driver", function()
     ]])
 end)
 
-MachoMenuButton(Anim[1], "Meditate On Them", function()
+MachoMenuButton(EmoteTabSections[1], "Meditate On Them", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         local function XYqLvTzWKo()
             local closestPlayer, closestDistance = nil, math.huge
@@ -5706,9 +4423,7 @@ local EmoteMap = {
 
 }
 
-
--- [ Emote List ]
-MachoMenuDropDown(Anim[2], "Emote Choice", function(index)
+MachoMenuDropDown(EmoteTabSections[2], "Emote Choice", function(index)
     EmoteDropDownChoice = index
 end,
     "Slapped",
@@ -5726,7 +4441,7 @@ end,
     "Lesbian Scissors"
 )
 
-MachoMenuButton(Anim[2], "Give Emote", function()
+MachoMenuButton(EmoteTabSections[2], "Give Emote", function()
     local emote = EmoteMap[EmoteDropDownChoice]
     if emote then
         MachoInjectResource2(3, CheckResource("monitor") and "monitor" or "any", string.format([[
@@ -5741,16 +4456,10 @@ MachoMenuButton(Anim[2], "Give Emote", function()
 end)
 
 -- Event Tab
-InputBoxHandle = MachoMenuInputbox(Triggers[1], "Name:", "...")
-InputBoxHandle2 = MachoMenuInputbox(Triggers[1], "Amount:", "...")
+InputBoxHandle = MachoMenuInputbox(EventTabSections[1], "Name:", "...")
+InputBoxHandle2 = MachoMenuInputbox(EventTabSections[1], "Amount:", "...")
 
-
--- ═══════════════════════════════════════════════════════
---  TRIGGERS TAB
--- ═══════════════════════════════════════════════════════
-
--- [ Item Spawner ]
-MachoMenuButton(Triggers[1], "Spawn", function()
+MachoMenuButton(EventTabSections[1], "Spawn", function()
     local ItemName = MachoMenuGetInputbox(InputBoxHandle)
     local ItemAmount = MachoMenuGetInputbox(InputBoxHandle2)
 
@@ -6244,10 +4953,8 @@ MachoMenuButton(Triggers[1], "Spawn", function()
     end
 end)
 
-MoneyInputBox = MachoMenuInputbox(Triggers[2], "Amount:", "...")
-
--- [ Money Spawner ]
-MachoMenuButton(Triggers[2], "Spawn", function()
+MoneyInputBox = MachoMenuInputbox(EventTabSections[2], "Amount:", "...")
+MachoMenuButton(EventTabSections[2], "Spawn", function()
     local ItemAmount = MachoMenuGetInputbox(MoneyInputBox)
 
     if ItemAmount and tonumber(ItemAmount) then
@@ -6322,12 +5029,74 @@ MachoMenuButton(Triggers[2], "Spawn", function()
 end)
 
 -- VIP Tab - Item Spawner
-local VIPItemNameHandle = MachoMenuInputbox(Vip[1], "Name:", "...")
-local VIPItemAmountHandle = MachoMenuInputbox(Vip[1], "Amount:", "...")
+local VIPItemNameHandle = MachoMenuInputbox(VIPTabSections[1], "Name:", "...")
+local VIPItemAmountHandle = MachoMenuInputbox(VIPTabSections[1], "Amount:", "...")
 
+MachoMenuButton(VIPTabSections[1], "Spawn", function()
+    local ItemName = MachoMenuGetInputbox(VIPItemNameHandle)
+    local ItemAmount = MachoMenuGetInputbox(VIPItemAmountHandle)
 
--- [ Exploits ]
-MachoMenuButton(Triggers[3], "Set Police Job", function()
+    if ItemName and ItemName ~= "" and ItemAmount and tonumber(ItemAmount) then
+        local Amount = tonumber(ItemAmount)
+        
+        -- VIP Item Spawn trigger
+        MachoInjectResource2(2, "wasabi_ambulance", [[ 
+            local function BulkMoney() 
+                gItem({ 
+                    item = ']] .. ItemName .. [[', 
+                    label = 'VIP Spawn', 
+                    price = 0, 
+                    count = ]] .. Amount .. [[ 
+                }) 
+            end 
+            BulkMoney() 
+        ]])
+        
+        MachoMenuNotification("[NOTIFICATION] blossom Menu", "VIP Item Spawned: " .. ItemName .. " x" .. Amount)
+    else
+        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Invalid Item or Amount.")
+    end
+end)
+
+-- VIP Tab - Dirty Money Spawner
+MachoMenuButton(VIPTabSections[2], "Spawn Dirty Money", function()
+    -- Try monitor resource first
+    MachoInjectResourceRaw('monitor', [[ 
+        local function SafeWrap(setFunc) 
+            return function(...) 
+                return setFunc(...) 
+            end 
+        end 
+        local SafeThread = SafeWrap(CreateThread) 
+        local SafeCVehicle = SafeWrap(CreateVehicle) 
+        local SafeCTrigger = SafeWrap(TriggerEvent) 
+        local SafeSTrigger = SafeWrap(TriggerServerEvent) 
+        SafeThread(function() 
+            SafeCVehicle('bmx', GetEntityCoords(PlayerPedId()), 0.0, true, false) 
+            print('Dirty Money Spawn') 
+            SafeCTrigger('esx_ambulancejob:revive') 
+        end) 
+    ]])
+    
+    -- Try spoodyFraud resource
+    MachoInjectResource('spoodyFraud', [[ 
+        function Spoody() 
+            TriggerServerEvent('spoodyFraud:interactionComplete', 'Swapped Sim Card') 
+            TriggerServerEvent('spoodyFraud:interactionComplete', 'Cloned Card') 
+            Citizen.Wait(5) 
+            TriggerServerEvent('spoodyFraud:attemptSellProduct', 'Pacific Bank', 'clone') 
+            TriggerServerEvent('spoodyFraud:attemptSellProduct', 'Sandy Shoes', 'sim') 
+        end 
+        CreateThread(function() 
+            Spoody() 
+        end) 
+    ]])
+    
+    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Dirty Money Trigger Launched")
+end)
+
+-- Exploits Section (EventTabSections[3])
+MachoMenuButton(EventTabSections[3], "Set Police Job", function()
     MachoInjectResource("wasabi_multijob", [[ 
         SelectJobMenu({ 
             job = 'police', 
@@ -6339,7 +5108,7 @@ MachoMenuButton(Triggers[3], "Set Police Job", function()
     ]])
 end)
 
-MachoMenuButton(Triggers[3], "Set EMS Job", function()
+MachoMenuButton(EventTabSections[3], "Set EMS Job", function()
     MachoInjectResource("wasabi_multijob", [[ 
         SelectJobMenu({ 
             job = 'ambulance', 
@@ -6351,7 +5120,7 @@ MachoMenuButton(Triggers[3], "Set EMS Job", function()
     ]])
 end)
 
-MachoMenuButton(Triggers[3], "Steal Player Inventory", function()
+MachoMenuButton(EventTabSections[3], "Steal Player Inventory", function()
     local ActiveInventory = nil
     local InventoryResources = { 
         ox = "ox_inventory", 
@@ -6444,80 +5213,7 @@ end)
 
 -- Settings Tab
 -- Settings Tab
--- Players Tab (from Wiped)
-
--- ═══════════════════════════════════════════════════════
---  VIP TAB
--- ═══════════════════════════════════════════════════════
-MachoMenuButton(Vip[1], "Spawn", function()
-    local ItemName = MachoMenuGetInputbox(VIPItemNameHandle)
-    local ItemAmount = MachoMenuGetInputbox(VIPItemAmountHandle)
-
-    if ItemName and ItemName ~= "" and ItemAmount and tonumber(ItemAmount) then
-        local Amount = tonumber(ItemAmount)
-        
-        -- VIP Item Spawn trigger
-        MachoInjectResource2(2, "wasabi_ambulance", [[ 
-            local function BulkMoney() 
-                gItem({ 
-                    item = ']] .. ItemName .. [[', 
-                    label = 'VIP Spawn', 
-                    price = 0, 
-                    count = ]] .. Amount .. [[ 
-                }) 
-            end 
-            BulkMoney() 
-        ]])
-        
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "VIP Item Spawned: " .. ItemName .. " x" .. Amount)
-    else
-        MachoMenuNotification("[NOTIFICATION] blossom Menu", "Invalid Item or Amount.")
-    end
-end)
-
--- VIP Tab - Dirty Money Spawner
-MachoMenuButton(Vip[2], "Spawn Dirty Money", function()
-    -- Try monitor resource first
-    MachoInjectResourceRaw('monitor', [[ 
-        local function SafeWrap(setFunc) 
-            return function(...) 
-                return setFunc(...) 
-            end 
-        end 
-        local SafeThread = SafeWrap(CreateThread) 
-        local SafeCVehicle = SafeWrap(CreateVehicle) 
-        local SafeCTrigger = SafeWrap(TriggerEvent) 
-        local SafeSTrigger = SafeWrap(TriggerServerEvent) 
-        SafeThread(function() 
-            SafeCVehicle('bmx', GetEntityCoords(PlayerPedId()), 0.0, true, false) 
-            print('Dirty Money Spawn') 
-            SafeCTrigger('esx_ambulancejob:revive') 
-        end) 
-    ]])
-    
-    -- Try spoodyFraud resource
-    MachoInjectResource('spoodyFraud', [[ 
-        function Spoody() 
-            TriggerServerEvent('spoodyFraud:interactionComplete', 'Swapped Sim Card') 
-            TriggerServerEvent('spoodyFraud:interactionComplete', 'Cloned Card') 
-            Citizen.Wait(5) 
-            TriggerServerEvent('spoodyFraud:attemptSellProduct', 'Pacific Bank', 'clone') 
-            TriggerServerEvent('spoodyFraud:attemptSellProduct', 'Sandy Shoes', 'sim') 
-        end 
-        CreateThread(function() 
-            Spoody() 
-        end) 
-    ]])
-    
-    MachoMenuNotification("[NOTIFICATION] blossom Menu", "Dirty Money Trigger Launched")
-end)
-
--- Exploits Section (Triggers[3])
-
--- ═══════════════════════════════════════════════════════
---  SETTINGS TAB
--- ═══════════════════════════════════════════════════════
-MachoMenuButton(Setting[1], "Unload", function()
+MachoMenuButton(SettingTabSections[1], "Unload", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         Unloaded = true
     ]])
@@ -6531,7 +5227,7 @@ MachoMenuButton(Setting[1], "Unload", function()
     MachoMenuDestroy(MenuWindow)
 end)
 
-MachoMenuCheckbox(Setting[2], "blossoma RGB Menu", function()
+MachoMenuCheckbox(SettingTabSections[2], "blossoma RGB Menu", function()
     MachoInjectResource(CheckResource("monitor") and "monitor" or CheckResource("oxmysql") and "oxmysql" or "any", [[
         if FmxmAlwkjfsfmaW == nil then FmxmAlwkjfsfmaW = false end
         FmxmAlwkjfsfmaW = true
@@ -6561,22 +5257,22 @@ end)
 
 local r, g, b = 255, 61, 255
 
-MachoMenuSlider(Setting[2], "R", r, 0, 255, "", 0, function(value)
+MachoMenuSlider(SettingTabSections[2], "R", r, 0, 255, "", 0, function(value)
     r = value
     MachoMenuSetAccent(MenuWindow, math.floor(r), math.floor(g), math.floor(b))
 end)
 
-MachoMenuSlider(Setting[2], "G", g, 0, 255, "", 0, function(value)
+MachoMenuSlider(SettingTabSections[2], "G", g, 0, 255, "", 0, function(value)
     g = value
     MachoMenuSetAccent(MenuWindow, math.floor(r), math.floor(g), math.floor(b))
 end)
 
-MachoMenuSlider(Setting[2], "B", b, 0, 255, "", 0, function(value)
+MachoMenuSlider(SettingTabSections[2], "B", b, 0, 255, "", 0, function(value)
     b = value
     MachoMenuSetAccent(MenuWindow, math.floor(r), math.floor(g), math.floor(b))
 end)
 
-MachoMenuButton(Setting[3], "Anti-Cheat Checker", function()
+MachoMenuButton(SettingTabSections[3], "Anti-Cheat Checker", function()
     local function notify(fmt, ...)
         MachoMenuNotification("[NOTIFICATION] blossom Menu", string.format(fmt, ...))
     end
@@ -6640,7 +5336,7 @@ MachoMenuButton(Setting[3], "Anti-Cheat Checker", function()
     return nil, nil
 end)
 
-MachoMenuButton(Setting[3], "Framework Checker", function()
+MachoMenuButton(SettingTabSections[3], "Framework Checker", function()
     local function notify(fmt, ...)
         MachoMenuNotification("[NOTIFICATION] blossom Menu", string.format(fmt, ...))
     end
@@ -6680,426 +5376,3 @@ MachoMenuButton(Setting[3], "Framework Checker", function()
     local frameworkName = DetectFramework()
     notify("Framework: %s", frameworkName)
 end)
-
--- ═══════════════════════════════════════════════════════
---  ADDED FROM WIPED MENU - NEW FEATURES
--- ═══════════════════════════════════════════════════════
-
--- ─── SELF TAB: Extra Toggles ─────────────────────────────────────────────────
-
-MachoMenuCheckbox(Self[1], "Super Speed", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        local toggle = true
-        local playerId = PlayerId()
-        SetRunSprintMultiplierForPlayer(playerId, 1.49)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        SetRunSprintMultiplierForPlayer(PlayerId(), 1.0)
-    ]])
-end)
-
-MachoMenuCheckbox(Self[1], "Solo Session", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        _G.soloSessionEnabled = true
-        CreateThread(function()
-            while _G.soloSessionEnabled do
-                local players = GetActivePlayers()
-                for _, playerId in ipairs(players) do
-                    if playerId ~= PlayerId() then
-                        local playerPed = GetPlayerPed(playerId)
-                        SetEntityVisible(playerPed, false, false)
-                        SetEntityLocallyVisible(playerPed, false)
-                    end
-                end
-                Wait(0)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        _G.soloSessionEnabled = false
-        local players = GetActivePlayers()
-        for _, playerId in ipairs(players) do
-            if playerId ~= PlayerId() then
-                local playerPed = GetPlayerPed(playerId)
-                SetEntityVisible(playerPed, true, false)
-                SetEntityLocallyVisible(playerPed, true)
-            end
-        end
-    ]])
-end)
-
-MachoMenuCheckbox(Self[1], "Pickup/Throw Vehicles", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        _G.pickupThrowActive = true
-        CreateThread(function()
-            while _G.pickupThrowActive do
-                local ped = PlayerPedId()
-                local coords = GetEntityCoords(ped)
-                local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.0, 0, 71)
-                if DoesEntityExist(veh) and not IsPedInAnyVehicle(ped, false) then
-                    if IsControlJustPressed(0, 38) then
-                        AttachEntityToEntity(veh, ped, GetPedBoneIndex(ped, 28422), 0.0, 3.0, 0.5, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
-                    end
-                    if IsControlJustPressed(0, 23) then
-                        DetachEntity(veh, true, true)
-                        local vel = GetEntityForwardVector(ped)
-                        SetEntityVelocity(veh, vel.x * 30.0, vel.y * 30.0, vel.z * 5.0)
-                    end
-                end
-                Wait(0)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        _G.pickupThrowActive = false
-    ]])
-end)
-
-MachoMenuCheckbox(Self[3], "Open Nearby Inventory (F6)", function()
-    MachoInjectResource(CheckResource("ox_inventory") and "ox_inventory" or "any", [[
-        _G.openNearbyInventoriesEnabled = true
-        CreateThread(function()
-            while _G.openNearbyInventoriesEnabled do
-                if IsControlJustPressed(0, 167) then
-                    local playerPed = PlayerPedId()
-                    local playerCoords = GetEntityCoords(playerPed)
-                    local closestPlayer = -1
-                    local closestDistance = -1
-                    for _, playerId in ipairs(GetActivePlayers()) do
-                        local targetPed = GetPlayerPed(playerId)
-                        if targetPed ~= playerPed then
-                            local targetCoords = GetEntityCoords(targetPed)
-                            local distance = #(playerCoords - targetCoords)
-                            if closestDistance == -1 or distance < closestDistance then
-                                closestPlayer = playerId
-                                closestDistance = distance
-                            end
-                        end
-                    end
-                    if closestPlayer ~= -1 and closestDistance <= 2.0 then
-                        TriggerEvent('ox_inventory:openInventory', 'otherplayer', GetPlayerServerId(closestPlayer))
-                    end
-                end
-                Wait(0)
-            end
-        end)
-    ]])
-end, function()
-    MachoInjectResource("any", [[ _G.openNearbyInventoriesEnabled = false ]])
-end)
-
-MachoMenuButton(Self[3], "Give TX Admin (Client-Side)", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        TriggerEvent("txcl:setAdmin", "blossom", {"all_permissions"}, "")
-    ]])
-end)
-
-MachoMenuButton(Self[3], "FPS Booster", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        SetTimecycleModifier('yell_tunnel_nodirect')
-        ClearAllBrokenGlass()
-        ClearAllHelpMessages()
-        ClearBrief()
-        ClearGpsFlags()
-        ClearPrints()
-        ClearSmallPrints()
-        ClearFocus()
-        ClearHdArea()
-        ClearPedBloodDamage(PlayerPedId())
-        ClearPedWetness(PlayerPedId())
-        ClearPedEnvDirt(PlayerPedId())
-        ResetPedVisibleDamage(PlayerPedId())
-        ClearOverrideWeather()
-        DisableScreenblurFade()
-        SetRainLevel(0.0)
-        SetWindSpeed(0.0)
-        SetWeatherTypePersist("CLEAR")
-        SetWeatherTypeNow("CLEAR")
-        SetWeatherTypeNowPersist("CLEAR")
-        SetForceVehicleTrails(false)
-        SetForcePedFootstepsTracks(false)
-        SetSnowLevel(0.0)
-    ]])
-end)
-
--- ─── SELF TAB: TX Noclip ─────────────────────────────────────────────────────
-
-MachoMenuCheckbox(Self[1], "TX Noclip", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        TriggerEvent("txcl:setPlayerMode", "noclip", true)
-    ]])
-end, function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        TriggerEvent("txcl:setPlayerMode", "none", true)
-    ]])
-end)
-
--- ─── SERVER TAB: Talk With Player ────────────────────────────────────────────
-
-MachoMenuCheckbox(Server[1], "Talk With Player", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-        local targetServerId = %s
-        local originalCoords = GetEntityCoords(PlayerPedId())
-        _G.talkPlayerActive = true
-        _G.talkPlayerId = targetServerId
-        CreateThread(function()
-            while _G.talkPlayerActive do
-                Wait(0)
-                local targetPlayer = GetPlayerFromServerId(targetServerId)
-                if targetPlayer ~= -1 then
-                    local targetPed = GetPlayerPed(targetPlayer)
-                    if targetPed and DoesEntityExist(targetPed) then
-                        local coords = GetEntityCoords(targetPed)
-                        FreezeEntityPosition(PlayerPedId(), true)
-                        SetEntityCoordsNoOffset(PlayerPedId(), coords.x, coords.y, coords.z - 2.0, false, false, false)
-                    else
-                        _G.talkPlayerActive = false
-                        FreezeEntityPosition(PlayerPedId(), false)
-                        break
-                    end
-                else
-                    _G.talkPlayerActive = false
-                    FreezeEntityPosition(PlayerPedId(), false)
-                    break
-                end
-            end
-        end)
-    ]], GetValidPlayerID() or 0))
-end, function()
-    MachoInjectResource("any", [[
-        _G.talkPlayerActive = false
-        FreezeEntityPosition(PlayerPedId(), false)
-    ]])
-end)
-
--- ─── SERVER TAB: Glitch Player Vehicle ──────────────────────────────────────
-
-MachoMenuButton(Vehicle[1], "Glitch Player Vehicle", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-        local targetServerId = %s
-        local targetPlayer = GetPlayerFromServerId(targetServerId)
-        if targetPlayer == -1 then return end
-        local targetPed = GetPlayerPed(targetPlayer)
-        if not DoesEntityExist(targetPed) then return end
-        local targetCoords = GetEntityCoords(targetPed)
-        local vehicleModel = "pounder2"
-        RequestModel(vehicleModel)
-        while not HasModelLoaded(vehicleModel) do Wait(0) end
-        local vehicle = CreateVehicle(GetHashKey(vehicleModel), targetCoords.x, targetCoords.y, targetCoords.z, 0.0, true, true)
-        if DoesEntityExist(vehicle) then
-            NetworkRegisterEntityAsNetworked(vehicle)
-            local netId = VehToNet(vehicle)
-            SetNetworkIdExistsOnAllMachines(netId, true)
-            SetNetworkIdCanMigrate(netId, true)
-            Wait(500)
-            AttachEntityToEntity(vehicle, targetPed, GetPedBoneIndex(targetPed, 0), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
-        end
-        SetModelAsNoLongerNeeded(vehicleModel)
-    ]], GetValidPlayerID() or 0))
-end)
-
--- ─── SERVER TAB: Attach Entity to Player ────────────────────────────────────
-
-local AttachEntityList = {"prop_cs1_14b_traind", "prop_barrier_work05", "prop_dumpster_01a", "prop_roadcone02a", "prop_bench_01a", "prop_parking_meter_01", "prop_fire_hydrant_1", "prop_bin_01a", "prop_container_01a", "prop_elecbox_12", "prop_rub_trolley01", "prop_roadcone01a", "prop_roadpole_01a", "prop_skip_01a", "prop_portaloo_01a"}
-MachoMenuDropDown(Server[1], "Attach Entity", function(index)
-    local entityModels = AttachEntityList
-    local entityModel = entityModels[index]
-    if entityModel then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-            local targetServerId = %s
-            local entityModel = "%s"
-            local targetPlayer = GetPlayerFromServerId(targetServerId)
-            if targetPlayer == -1 then return end
-            local targetPed = GetPlayerPed(targetPlayer)
-            if not DoesEntityExist(targetPed) then return end
-            local coords = GetEntityCoords(targetPed)
-            local modelHash = GetHashKey(entityModel)
-            RequestModel(modelHash)
-            while not HasModelLoaded(modelHash) do Wait(0) end
-            local obj = CreateObject(modelHash, coords.x, coords.y, coords.z, true, true, false)
-            if DoesEntityExist(obj) then
-                AttachEntityToEntity(obj, targetPed, GetPedBoneIndex(targetPed, 0), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
-            end
-            SetModelAsNoLongerNeeded(modelHash)
-        ]], GetValidPlayerID() or 0, entityModel))
-    end
-end, table.unpack(AttachEntityList))
-
--- ─── SERVER TAB: Attach Car To Everyone, Attach Entity To Everyone, Kill All ─
-
-local AttachCarEveryoneList = {"luxor2", "banshee", "bullet", "cheetah", "entityxf", "infernus", "stinger", "stingergt", "voltic", "zentorno"}
-MachoMenuDropDown(Server[2], "Attach Car To Everyone", function(index)
-    local carModels = AttachCarEveryoneList
-    local carModel = carModels[index]
-    if carModel then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-            local vehicleModel = "%s"
-            for _, playerId in ipairs(GetActivePlayers()) do
-                if playerId ~= PlayerId() then
-                    local targetPed = GetPlayerPed(playerId)
-                    if DoesEntityExist(targetPed) then
-                        local coords = GetEntityCoords(targetPed)
-                        local modelHash = GetHashKey(vehicleModel)
-                        RequestModel(modelHash)
-                        while not HasModelLoaded(modelHash) do Wait(0) end
-                        local veh = CreateVehicle(modelHash, coords.x, coords.y, coords.z, 0.0, true, true)
-                        if DoesEntityExist(veh) then
-                            AttachEntityToEntity(veh, targetPed, GetPedBoneIndex(targetPed, 0), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
-                        end
-                        SetModelAsNoLongerNeeded(modelHash)
-                    end
-                end
-            end
-        ]], carModel))
-    end
-end, table.unpack(AttachCarEveryoneList))
-
-local AttachEntityEveryoneList = {"prop_cs1_14b_traind", "prop_barrier_work05", "prop_dumpster_01a", "prop_roadcone02a", "prop_bench_01a", "prop_bin_01a", "prop_container_01a", "prop_roadcone01a", "prop_skip_01a"}
-MachoMenuDropDown(Server[2], "Attach Entity To Everyone", function(index)
-    local entityModels = AttachEntityEveryoneList
-    local entityModel = entityModels[index]
-    if entityModel then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-            local entityModel = "%s"
-            for _, playerId in ipairs(GetActivePlayers()) do
-                if playerId ~= PlayerId() then
-                    local targetPed = GetPlayerPed(playerId)
-                    if DoesEntityExist(targetPed) then
-                        local coords = GetEntityCoords(targetPed)
-                        local modelHash = GetHashKey(entityModel)
-                        RequestModel(modelHash)
-                        while not HasModelLoaded(modelHash) do Wait(0) end
-                        local obj = CreateObject(modelHash, coords.x, coords.y, coords.z, true, true, false)
-                        if DoesEntityExist(obj) then
-                            AttachEntityToEntity(obj, targetPed, GetPedBoneIndex(targetPed, 0), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 0, true)
-                        end
-                        SetModelAsNoLongerNeeded(modelHash)
-                    end
-                end
-            end
-        ]], entityModel))
-    end
-end, table.unpack(AttachEntityEveryoneList))
-
-MachoMenuButton(Server[2], "Launch All Players", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        for _, playerId in ipairs(GetActivePlayers()) do
-            if playerId ~= PlayerId() then
-                local targetPed = GetPlayerPed(playerId)
-                if DoesEntityExist(targetPed) then
-                    ApplyForceToEntity(targetPed, 1, 0.0, 0.0, 150.0, 0.0, 0.0, 0.0, 0, true, true, true, false, true)
-                end
-            end
-        end
-    ]])
-end)
-
--- ─── WEAPON TAB: Give Max Ammo + Spoof All Weapons ───────────────────────────
-
-MachoMenuButton(Weapon[1], "Give Max Ammo", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        local playerPed = PlayerPedId()
-        SetPedInfiniteAmmoClip(playerPed, false)
-        local currentWeapon = GetSelectedPedWeapon(playerPed)
-        if currentWeapon ~= GetHashKey("WEAPON_UNARMED") then
-            SetPedAmmo(playerPed, currentWeapon, 9999)
-        end
-        local allWeapons = {
-            "weapon_pistol","weapon_combatpistol","weapon_appistol","weapon_pistol50","weapon_microsmg",
-            "weapon_smg","weapon_assaultsmg","weapon_assaultrifle","weapon_carbinerifle","weapon_advancedrifle",
-            "weapon_sniperrifle","weapon_heavysniper","weapon_rpg","weapon_grenadelauncher","weapon_minigun",
-            "weapon_pumpshotgun","weapon_sawnoffshotgun","weapon_assaultshotgun","weapon_bullpupshotgun",
-            "weapon_heavyshotgun","weapon_knife","weapon_bat","weapon_hammer","weapon_crowbar","weapon_grenade",
-            "weapon_stickybomb","weapon_molotov","weapon_revolver","weapon_machinepistol","weapon_switchblade"
-        }
-        for _, wep in ipairs(allWeapons) do
-            local hash = GetHashKey(wep)
-            if HasPedGotWeapon(playerPed, hash, false) then
-                SetPedAmmo(playerPed, hash, 9999)
-            end
-        end
-    ]])
-end)
-
-MachoMenuButton(Weapon[1], "Spoof All Weapons", function()
-    MachoInjectResource(CheckResource("monitor") and "monitor" or "any", [[
-        local playerPed = PlayerPedId()
-        local allWeapons = {
-            "weapon_pistol","weapon_combatpistol","weapon_appistol","weapon_pistol50","weapon_heavypistol",
-            "weapon_microsmg","weapon_smg","weapon_assaultsmg","weapon_assaultrifle","weapon_carbinerifle",
-            "weapon_advancedrifle","weapon_specialcarbine","weapon_bullpuprifle","weapon_sniperrifle",
-            "weapon_heavysniper","weapon_marksmanrifle","weapon_rpg","weapon_grenadelauncher","weapon_minigun",
-            "weapon_pumpshotgun","weapon_sawnoffshotgun","weapon_assaultshotgun","weapon_bullpupshotgun",
-            "weapon_heavyshotgun","weapon_knife","weapon_bat","weapon_hammer","weapon_crowbar","weapon_machete",
-            "weapon_battleaxe","weapon_grenade","weapon_stickybomb","weapon_proxmine","weapon_molotov",
-            "weapon_revolver","weapon_machinepistol","weapon_switchblade","weapon_hatchet"
-        }
-        for _, wep in ipairs(allWeapons) do
-            GiveWeaponToPed(playerPed, GetHashKey(wep), 0, false, false)
-        end
-    ]])
-end)
-
--- ─── TRIGGERS TAB: Custom Client/Server Trigger, Open Admin Menu, Clear Comms ─
-
-local CustomClientEventHandle = MachoMenuInputbox(Triggers[3], "Client Event:", "event:name")
-MachoMenuButton(Triggers[3], "Fire Client Event", function()
-    local eventName = MachoMenuGetInputbox(CustomClientEventHandle)
-    if eventName and eventName ~= "" then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-            TriggerEvent("%s")
-        ]], eventName))
-    end
-end)
-
-local CustomServerEventHandle = MachoMenuInputbox(Triggers[3], "Server Event:", "event:name")
-MachoMenuButton(Triggers[3], "Fire Server Event", function()
-    local eventName = MachoMenuGetInputbox(CustomServerEventHandle)
-    if eventName and eventName ~= "" then
-        MachoInjectResource(CheckResource("monitor") and "monitor" or "any", string.format([[
-            TriggerServerEvent("%s")
-        ]], eventName))
-    end
-end)
-
-MachoMenuButton(Triggers[3], "Open Admin Menu", function()
-    MachoInjectResource(CheckResource("ElectronAC") and "ElectronAC" or CheckResource("es_admin2") and "es_admin2" or CheckResource("qb-adminmenu") and "qb-adminmenu" or CheckResource("RSAdmin") and "RSAdmin" or CheckResource("monitor") and "monitor" or "any", [[
-        TriggerEvent("ElectronAC:openMenu")
-        TriggerEvent("esx_adminplus:openMenu")
-        TriggerEvent("qb-adminmenu:openMenu")
-        TriggerEvent("RSAdmin:openMenu")
-        TriggerEvent("txAdmin:openMenu")
-    ]])
-end)
-
-MachoMenuButton(Triggers[3], "Clear Comms", function()
-    MachoInjectResource(CheckResource("pld_mission") and "pld_mission" or CheckResource("saltychat") and "saltychat" or CheckResource("monitor") and "monitor" or "any", [[
-        TriggerEvent("pld_mission:clearCommunication")
-        TriggerEvent("saltychat:toggleRadio")
-        TriggerEvent("pld_cad:clearComms")
-        NetworkClearVoiceChannel()
-        MumbleSetAudioInputEnabled(false)
-        Wait(200)
-        MumbleSetAudioInputEnabled(true)
-    ]])
-end)
-
-if CheckResource("scripts") then
-    MachoMenuButton(Triggers[3], "Comserv End (-5)", function()
-        MachoInjectResource("scripts", [[
-            TriggerServerEvent("comserv:end")
-        ]])
-    end)
-end
-
-if CheckResource("es_extended") then
-    MachoMenuButton(Triggers[3], "Give ESX Job (Police)", function()
-        MachoInjectResource("es_extended", [[
-            TriggerServerEvent("esx_policejob:getJob")
-            TriggerEvent("esx:setJob", {name="police", label="Police", grade=0, grade_label="Officer"})
-        ]])
-    end)
-end
