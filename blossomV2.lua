@@ -1,4 +1,3 @@
-
 -- Menu Builder
 local MenuSize = vec2(650, 500)
 local MenuStartCoords = vec2(500, 500)
